@@ -2,15 +2,24 @@
 //http://digital.ni.com/public.nsf/allkb/83894C96C792DA9E86256C36005D188F
 //http://cui.unige.ch/db-research/Enseignement/analyseinfo/AboutBNF.html 
 
-
+<type> ::= int | boolean | string | char
 <integer> ::= <digit> {<digit>}*
+<boolean> ::= true | false
+<variable_name> ::= <char> {<char>}*
 <string> ::= " <char> {<char>}* "
 <char> ::= <letter>  |  <digit>
 <letter> ::= a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
 <digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-<floating-point-number> ::= [basic_sign] {digit}* decimal-point {digit}* [exponent] | [basic_sign] {digit}+ [decimal-point {digit}*] exponent
-<basic_sign> ::= + | -
+<floating_point_number> ::= [<sign>] {<digit>}* <decimal-point> {<digit>}* [<exponent>] | [<sign>] {<digit>}+ [<decimal-point> {<digit>}*] <exponent>
+<sign> ::= + | -
+<arithmetic_operators> ::= + | - | * | /  FALTA DEFINIR LOS QUE VAN CON ESTOS
+<relational_operators> ::= < | > | == ESTOS SE USAN CON EL EXPRESSION_BOOLEAN
+<logical_operators> ::= and | or | not ESTOS TAMBIEN, COMBINADO CON LO DE ARRIBA
 <decimal-point> ::= .
-<exponent> ::= exponent-marker [basic_sign] {digit}+
+<exponent> ::= <exponent-marker> [<sign>] {<digit>}+
 <exponent-marker> ::= e | E 
-
+<expression_boolean> ::= ACA QUE CAPSO PONEMOS ?? 
+<statement> ::= <if_statement> | <do_while_statement> | <variable_assign>
+<variable_assign> ::=  <type> <variable_name> = {<integer> | <boolean> | <string> | <char>} ; //aca elegimos entre varias opciones
+<if_statement> ::= if [ <expression_boolean> ] then <statement> end
+<do_while_statement> ::= do {<statement>}* while [ <boolean_expression> ] end
