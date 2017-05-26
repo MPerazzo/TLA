@@ -1,0 +1,16 @@
+//https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node19.html
+//http://digital.ni.com/public.nsf/allkb/83894C96C792DA9E86256C36005D188F
+//http://cui.unige.ch/db-research/Enseignement/analyseinfo/AboutBNF.html 
+
+
+<integer> ::= <digit> {<digit>}*
+<string> ::= " <char> {<char>}* "
+<char> ::= <letter>  |  <digit>
+<letter> ::= a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
+<digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+<floating-point-number> ::= [basic_sign] {digit}* decimal-point {digit}* [exponent] | [basic_sign] {digit}+ [decimal-point {digit}*] exponent
+<basic_sign> ::= + | -
+<decimal-point> ::= .
+<exponent> ::= exponent-marker [basic_sign] {digit}+
+<exponent-marker> ::= e | E 
+
