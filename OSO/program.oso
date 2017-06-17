@@ -1,0 +1,16 @@
+run-oso
+integer hola = 5;
+if [100>1] start
+	integer v = 130;
+	integer v1 = 11;
+end
+if [100>1] start
+	integer h = 130;
+
+	if [100>1] start
+		integer var1 = 130;
+		integer var2 = 11;
+	end
+
+end
+integer h1 = 137;
