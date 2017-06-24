@@ -27,7 +27,8 @@ unsigned int hash_variable(char *key){
 }
 
 int check_var_exist(unsigned int hash_var_name){
-	for(int i = 0 ; i < tot_vars; i++){
+	int i;	
+	for(i = 0 ; i < tot_vars; i++){
 		if( vars_names[i] == hash_var_name ){
 			return DENIED;
 		}

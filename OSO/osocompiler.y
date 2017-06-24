@@ -12,7 +12,7 @@
 
 %token RUN
 %token INTEGER_TYPE
-%token IF FOR START END
+%token IF FOR WHILE START END
 %token LE GE EQ NE OR AND
 
 %token <number> INTEGER
@@ -30,32 +30,57 @@
 
 %%
 
-INIT: 	RUN P
-		;
+INIT: 			RUN P
+				;
 
-P:		STATEMENTS 
-		| P STATEMENTS 
-		;
+P:				STATEMENTS 
+				| P STATEMENTS 
+				;
 
-STIF:		IF '[' E ']' BODY
-		;
+STIF:			IF '[' E ']' BODY
+				;
 
-V_INT:		INTEGER_TYPE ID '=' INTEGER ';'	{
-												printf("V_INT-> %s : %d\n",$2,$4);
-												int value = add_variable($2,$4);
-												if(value == DENIED)
-													return DENIED;
-											}
-		;
+STWHILE:		WHILE '[' E ']' BODY
+				;
+
+STFOR:			FOR '[' C_DECLARATION ';' E ';' ']' BODY
+
+DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
+				;
+
+S_DECLARATION:	TYPE ID
+				;
+
+C_DECLARATION:	TYPE ID '=' VALUE
+				;		
+
+TYPE:			INTEGER_TYPE
+				;
+
+VALUE:			INTEGER
+				;
+
+/* V_INT:			INTEGER_TYPE ID '=' INTEGER ';'	{
+													printf("V_INT-> %s : %d\n",$2,$4);
+													int value = add_variable($2,$4);
+													if(value == DENIED)
+														return DENIED;
+												}
+				;
+*/
 
 BODY:		START STATEMENTS END
 		;
 
 STATEMENTS:	
-		  V_INT
+		  DECLARATION
 		| STIF
-		| STATEMENTS V_INT
+		| STWHILE
+		| STFOR
+		| STATEMENTS DECLARATION
 		| STATEMENTS STIF
+		| STATEMENTS STWHILE
+		| STATEMENTS STFOR
 		;
        
 E:		ID '=' E
