@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "ansioso.h"
+#include <vmanager.h>
 %}
 
 %union 
@@ -43,7 +43,7 @@ STIF:			IF '[' E ']' BODY
 STWHILE:		WHILE '[' E ']' BODY
 				;
 
-STFOR:			FOR '[' C_DECLARATION ';' E ';' ']' BODY
+STFOR:			FOR '[' C_DECLARATION ';' E ';' ACTION ']' BODY
 
 DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
 				;
@@ -59,6 +59,12 @@ TYPE:			INTEGER_TYPE
 
 VALUE:			INTEGER
 				;
+
+ACTION:			INCREASE | DECREASE
+
+INCREASE:		'+' '+' ID | ID '+' '+'
+
+DECREASE:		'-' '-' ID | ID '-' '-'
 
 /* V_INT:			INTEGER_TYPE ID '=' INTEGER ';'	{
 													printf("V_INT-> %s : %d\n",$2,$4);

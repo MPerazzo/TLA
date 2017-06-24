@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,17 +49,18 @@ extern int yydebug;
     INTEGER_TYPE = 259,
     IF = 260,
     FOR = 261,
-    START = 262,
-    END = 263,
-    LE = 264,
-    GE = 265,
-    EQ = 266,
-    NE = 267,
-    OR = 268,
-    AND = 269,
-    INTEGER = 270,
-    ID = 271,
-    UMINUS = 273
+    WHILE = 262,
+    START = 263,
+    END = 264,
+    LE = 265,
+    GE = 266,
+    EQ = 267,
+    NE = 268,
+    OR = 269,
+    AND = 270,
+    INTEGER = 271,
+    ID = 272,
+    UMINUS = 274
   };
 #endif
 /* Tokens.  */
@@ -67,21 +68,22 @@ extern int yydebug;
 #define INTEGER_TYPE 259
 #define IF 260
 #define FOR 261
-#define START 262
-#define END 263
-#define LE 264
-#define GE 265
-#define EQ 266
-#define NE 267
-#define OR 268
-#define AND 269
-#define INTEGER 270
-#define ID 271
-#define UMINUS 273
+#define WHILE 262
+#define START 263
+#define END 264
+#define LE 265
+#define GE 266
+#define EQ 267
+#define NE 268
+#define OR 269
+#define AND 270
+#define INTEGER 271
+#define ID 272
+#define UMINUS 274
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
+typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
 #line 8 "osocompiler.y" /* yacc.c:1909  */
@@ -89,10 +91,8 @@ union YYSTYPE
         int number;
         char *string;
 
-#line 93 "y.tab.h" /* yacc.c:1909  */
+#line 95 "y.tab.h" /* yacc.c:1909  */
 };
-
-typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

@@ -1,9 +1,12 @@
 run-oso
+
 integer hola = 5;
+
 if [100>1] start
 	integer v = 130;
 	integer v1 = 11;
 end
+
 if [100>1] start
 	integer h = 130;
 
@@ -13,4 +16,13 @@ if [100>1] start
 	end
 
 end
+
 integer h1 = 137;
+
+while [v>v200] start
+	integer v10 = 11;
+end
+
+for [integer asd=3 ; i<5 ; h1++] start
+	integer v10 = 11;
+end
