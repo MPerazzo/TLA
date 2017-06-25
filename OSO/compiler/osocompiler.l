@@ -19,28 +19,30 @@ for			return FOR;
 if			return IF;
 while		return WHILE;
 
-int			return INTEGER_TYPE;
-float 		return FLOAT_TYPE;
-string 		return STRING_TYPE;
+int			{	yylval.type = strdup(yytext);
+				return INTEGER_TYPE;
+			}
+float 		{
+				yylval.type = strdup(yytext);
+				return FLOAT_TYPE;
+			}
+string 		{
+				yylval.type = strdup(yytext);
+				return STRING_TYPE;
+			}
 
 start 		return START;
 end			return END;
 
-{digit}+	{
-				yylval.number = atoi(yytext);
-				return INTEGER;
-			}
+{digit}+	{return INTEGER;}
 
-{digit}+.{digit}+ { return FLOAT;}
+{digit}+.{digit}+ {return FLOAT;}
 
 [a-zA-Z][a-zA-Z0-9]* 	{
 							yylval.string = strdup(yytext);
 							return ID;
 						}
 
-\"(\\.|[^\\"])*\" 		{
-							return STRING;
-						}
 
 "<="		return LE;
 ">="		return GE;

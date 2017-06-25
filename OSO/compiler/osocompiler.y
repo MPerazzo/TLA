@@ -9,17 +9,19 @@
 
 %union 
 {
-        int number;
         char *string;
+        char *type;
 }
 
 %token RUN
-%token INTEGER_TYPE FLOAT_TYPE STRING_TYPE
+%token <type> INTEGER_TYPE 
+%token <type> FLOAT_TYPE 
+%token <type> STRING_TYPE
 %token IF FOR WHILE START END
 %token LE GE EQ NE OR AND
 
 %token FLOAT
-%token <number> INTEGER
+%token INTEGER
 %token <string> ID
 %token STRING
 
@@ -66,7 +68,7 @@ STFOR:			FOR '[' C_DECLARATION ';' E ';' ACTION ']' BODY
 DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
 				;
 
-S_DECLARATION:	INTEGER_TYPE ID | FLOAT_TYPE ID | STRING_TYPE ID {
+S_DECLARATION:	TYPE ID {
 										
 					if (add_var($2)) {
 						handlevRep(@2.last_line, $2);
@@ -75,7 +77,7 @@ S_DECLARATION:	INTEGER_TYPE ID | FLOAT_TYPE ID | STRING_TYPE ID {
 				}
 				;
 
-C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' FLOAT_OP | STRING_TYPE ID '=' STRING 
+C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' FLOAT_OP | STRING_TYPE ID '=' STRING
 				| STRING_TYPE ID '=' ID {
 										
 					if (add_var($2)) {
@@ -83,7 +85,7 @@ C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' INT_OP | FLOAT_TYP
 						YYABORT;
 					}
 				}
-				;
+				; 
 
 ASSIGNMENT:		ID '=' FLOAT_OP ';' | ID '=' INT_OP ';' | ID '=' STRING ';' {
 					
@@ -157,6 +159,8 @@ FLOAT_OP:		FLOAT_OP  '+' FLOAT_OP
 				| ID
 				| FLOAT
 				;
+
+TYPE:			INTEGER_TYPE FLOAT_TYPE STRING_TYPE
 
 %%
 
