@@ -43,6 +43,10 @@ end			return END;
 							return ID;
 						}
 
+\"(\\.|[^\\"])*\" 		{
+ 							return STRING;
+ 						}
+
 
 "<="		return LE;
 ">="		return GE;

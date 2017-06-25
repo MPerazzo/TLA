@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "handler.h"
+//static const char STRING_TYPE[] = "string";
+//static const char INT_TYPE[] = "int";
+//static const char FLOAT_TYPE[] = "float";
 %}
 
 %union 
@@ -20,10 +23,10 @@
 %token IF FOR WHILE START END
 %token LE GE EQ NE OR AND
 
-%token FLOAT
-%token INTEGER
+%token <type> FLOAT
+%token <type> INTEGER
+%token <type> STRING
 %token <string> ID
-%token STRING
 
 %right "="
 %left OR AND
@@ -68,33 +71,65 @@ STFOR:			FOR '[' C_DECLARATION ';' E ';' ACTION ']' BODY
 DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
 				;
 
-S_DECLARATION:	TYPE ID {
+S_DECLARATION:	INTEGER_TYPE ID | FLOAT_TYPE ID | STRING_TYPE ID{
 										
-					if (add_var($2)) {
+					if (add_var($2, $1)) {
 						handlevRep(@2.last_line, $2);
 						YYABORT;
 					}
 				}
 				;
 
-C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' FLOAT_OP | STRING_TYPE ID '=' STRING
-				| STRING_TYPE ID '=' ID {
+C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' FLOAT_OP | STRING_TYPE ID '=' STRING | STRING_TYPE ID '=' ID {
 										
-					if (add_var($2)) {
+					if (add_var($2, $1)) {
 						handlevRep(@4.last_line, $2);
 						YYABORT;
 					}
 				}
 				; 
 
-ASSIGNMENT:		ID '=' FLOAT_OP ';' | ID '=' INT_OP ';' | ID '=' STRING ';' {
+ASSIGNMENT:		F_ASSIGNMENT | I_ASSIGNMENT | S_ASSIGNMENT
+
+F_ASSIGNMENT:	ID '=' FLOAT_OP ';' {
 					
 					if (!check_var_exist($1)) {
 						handlevMiss(@4.last_line, $1);
 						YYABORT;
 					}
+
+					if (!check_var_type($1, "float")) {
+						handlevType(@4.last_line, $1, "float");
+						YYABORT;
+					}
 				}
 				;
+
+I_ASSIGNMENT:	ID '=' INT_OP ';' {
+					
+					if (!check_var_exist($1)) {
+						handlevMiss(@4.last_line, $1);
+						YYABORT;
+					}
+
+					if (!check_var_type($1, "int")) {
+						handlevType(@4.last_line, $1, "int");
+						YYABORT;
+					}
+				}
+
+S_ASSIGNMENT: 	ID '=' STRING ';' {
+					
+					if (!check_var_exist($1)) {
+						handlevMiss(@4.last_line, $1);
+						YYABORT;
+					}
+
+					if (!check_var_type($1, "string")) {
+						handlevType(@4.last_line, $1, "string");
+						YYABORT;
+					}
+				}
 
 ACTION:			INCREASE | DECREASE
 
@@ -159,9 +194,6 @@ FLOAT_OP:		FLOAT_OP  '+' FLOAT_OP
 				| ID
 				| FLOAT
 				;
-
-TYPE:			INTEGER_TYPE FLOAT_TYPE STRING_TYPE
-
 %%
 
 int yywrap()

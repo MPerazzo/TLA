@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "vmanager.h"
 
 var vars[MAX_VARS] = {0};
@@ -19,24 +20,39 @@ unsigned int hash_var(char *key){
     return hash;
 }
 
-token_state check_var_exist(char * var_name){
+bool check_var_exist(char * var_name){
 
 	unsigned int hash_var_name = hash_var(var_name);
 
 	int i;	
 	for(i = 0 ; i < tot_vars; i++){
 		if (vars[i].hash == hash_var_name)
-			return VAR_REPEATED;
+			return false;
 	}
-	return ACCEPTED;
+	return true;
 }
 
-token_state add_var(char* var_name){
+bool check_var_type(char * var_name, char * type){
+
+	unsigned int hash_var_name = hash_var(var_name);
+
+	int i;	
+	for(i = 0 ; i < tot_vars; i++){
+		if (vars[i].hash == hash_var_name && !strcmp(type, vars[i].type))
+			return true;
+	}
+	return false;
+
+}
+
+bool add_var(char* var_name, char * type){
 
 	if (check_var_exist(var_name))
-		return VAR_REPEATED;
+		return false;
 
 	vars[tot_vars].hash = hash_var(var_name);
+	vars[tot_vars].type = malloc(strlen(type) + 1);
+	strcpy(vars[tot_vars].type, type);
 	tot_vars++;
-	return ACCEPTED;
+	return true;
 }
