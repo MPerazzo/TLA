@@ -1,7 +1,10 @@
+%define parse.error verbose
+%locations
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include <vmanager.h>
+#include "handler.h"
 %}
 
 %union 
@@ -27,7 +30,6 @@
 %left '!'
 %start INIT
 
-
 %%
 
 INIT: 			RUN P
@@ -35,6 +37,19 @@ INIT: 			RUN P
 
 P:				STATEMENTS 
 				| P STATEMENTS 
+				;
+
+STATEMENTS:	
+		 		 DECLARATION
+				| ASSIGNMENT
+				| STIF
+				| STWHILE
+				| STFOR
+				| STATEMENTS ASSIGNMENT
+				| STATEMENTS DECLARATION
+				| STATEMENTS STIF
+				| STATEMENTS STWHILE
+				| STATEMENTS STFOR
 				;
 
 STIF:			IF '[' E ']' BODY
@@ -48,11 +63,32 @@ STFOR:			FOR '[' C_DECLARATION ';' E ';' ACTION ']' BODY
 DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
 				;
 
-S_DECLARATION:	TYPE ID
+S_DECLARATION:	TYPE ID {
+										
+					if (add_var($2)) {
+						handlevRep(@2.last_line, $2);
+						YYABORT;
+					}
+				}
 				;
 
-C_DECLARATION:	TYPE ID '=' VALUE
-				;		
+C_DECLARATION:	TYPE ID '=' E {
+										
+					if (add_var($2)) {
+						handlevRep(@4.last_line, $2);
+						YYABORT;
+					}
+				}
+				;
+
+ASSIGNMENT:		ID '=' E ';' {
+					
+					if (!check_var_exist($1)) {
+						handlevMiss(@4.last_line, $1);
+						YYABORT;
+					}
+				}
+				;
 
 TYPE:			INTEGER_TYPE
 				;
@@ -66,46 +102,24 @@ INCREASE:		'+' '+' ID | ID '+' '+'
 
 DECREASE:		'-' '-' ID | ID '-' '-'
 
-/* V_INT:			INTEGER_TYPE ID '=' INTEGER ';'	{
-													printf("V_INT-> %s : %d\n",$2,$4);
-													int value = add_variable($2,$4);
-													if(value == DENIED)
-														return DENIED;
-												}
-				;
-*/
-
 BODY:		START STATEMENTS END
 		;
-
-STATEMENTS:	
-		  DECLARATION
-		| STIF
-		| STWHILE
-		| STFOR
-		| STATEMENTS DECLARATION
-		| STATEMENTS STIF
-		| STATEMENTS STWHILE
-		| STATEMENTS STFOR
-		;
        
-E:		ID '=' E
+E:		E '=' E
+		| E '<' E
+		| E '>' E
 		| E '+' E 
 		| E '-' E
 		| E '*' E
-		| E '/' E
-		| E '<' E
-		| E '>' E {}
+		| E '/' E 
 		| E LE E
 		| E GE E
 		| E EQ E
 		| E NE E
 		| E OR E
 		| E AND E
-		| E '+' '+' 
-		| E '-' '-'
 		| ID  
-		| INTEGER
+		| VALUE
 		;
 
 %%
@@ -118,5 +132,6 @@ int yywrap()
 int main() {
     //printf("Enter the expression:\n");
     yyparse();
-} 
+}
+
 

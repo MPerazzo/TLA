@@ -1,4 +1,7 @@
+%option yylineno
+
 %{
+	#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 	#include <stdio.h>
 	#include <string.h>
     #include "y.tab.h"
@@ -21,17 +24,14 @@ integer		return INTEGER_TYPE;
 start 		return START;
 end			return END;
 
-[ \t\n]		;
-
-
 {digit}+	{
-			yylval.number = atoi(yytext);
-			return INTEGER;
+				yylval.number = atoi(yytext);
+				return INTEGER;
 			}
 
 [a-zA-Z][a-zA-Z0-9]* 	{
-						yylval.string = strdup(yytext);
-						return ID;
+							yylval.string = strdup(yytext);
+							return ID;
 						}
 
 "<="		return LE;
@@ -43,3 +43,8 @@ end			return END;
 .			return yytext[0];
 
 %%
+
+void yyerror(const char *str)
+{
+    fprintf(stderr,"Error at line %d : %s\n",yylineno, str);
+}
