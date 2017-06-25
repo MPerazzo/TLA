@@ -10,9 +10,9 @@ typedef struct{
     char * type;
 }var;
 
-unsigned int hash_var(char *key);
-bool check_var_exist(char * var_name);
-bool check_var_type(char * var_name, char * type);
-bool add_var(char* var_name, char* type);
+unsigned int hash_var(const char *key);
+bool check_var_exist(const char * var_name);
+bool check_var_type(const char * var_name, const char * type);
+bool add_var(const char* var_name, const char* type);
 
 #endif

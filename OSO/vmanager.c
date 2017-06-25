@@ -5,7 +5,7 @@
 var vars[MAX_VARS] = {0};
 int tot_vars = 0;
 
-unsigned int hash_var(char *key){
+unsigned int hash_var(const char *key){
     unsigned int hash, i;
     int len = 10;
     for (hash = i = 0; i < 10; ++i){
@@ -20,7 +20,7 @@ unsigned int hash_var(char *key){
     return hash;
 }
 
-bool check_var_exist(char * var_name){
+bool check_var_exist(const char * var_name){
 
 	unsigned int hash_var_name = hash_var(var_name);
 
@@ -32,7 +32,7 @@ bool check_var_exist(char * var_name){
 	return true;
 }
 
-bool check_var_type(char * var_name, char * type){
+bool check_var_type(const char * var_name, const char * type){
 
 	unsigned int hash_var_name = hash_var(var_name);
 
@@ -45,7 +45,7 @@ bool check_var_type(char * var_name, char * type){
 
 }
 
-bool add_var(char* var_name, char * type){
+bool add_var(const char* var_name, const char * type){
 
 	if (check_var_exist(var_name))
 		return false;

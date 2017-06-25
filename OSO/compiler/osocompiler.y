@@ -5,9 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "handler.h"
-//static const char STRING_TYPE[] = "string";
-//static const char INT_TYPE[] = "int";
-//static const char FLOAT_TYPE[] = "float";
+
+static const char STRING_T[] = "string";
+static const char INT_T[] = "int";
+static const char FLOAT_T[] = "float";
 %}
 
 %union 
@@ -23,9 +24,9 @@
 %token IF FOR WHILE START END
 %token LE GE EQ NE OR AND
 
-%token <type> FLOAT
-%token <type> INTEGER
-%token <type> STRING
+%token FLOAT
+%token INTEGER
+%token STRING
 %token <string> ID
 
 %right "="
@@ -71,21 +72,17 @@ STFOR:			FOR '[' C_DECLARATION ';' E ';' ACTION ']' BODY
 DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
 				;
 
-S_DECLARATION:	INTEGER_TYPE ID | FLOAT_TYPE ID | STRING_TYPE ID{
+S_DECLARATION:	INTEGER_TYPE ID | FLOAT_TYPE ID | STRING_TYPE ID {
 										
-					if (add_var($2, $1)) {
-						handlevRep(@2.last_line, $2);
+					if (!handlevDeclare($2, $1, @2.last_line))
 						YYABORT;
-					}
 				}
 				;
 
 C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' FLOAT_OP | STRING_TYPE ID '=' STRING | STRING_TYPE ID '=' ID {
 										
-					if (add_var($2, $1)) {
-						handlevRep(@4.last_line, $2);
+					if (!handlevDeclare($2, $1, @4.last_line))
 						YYABORT;
-					}
 				}
 				; 
 
@@ -93,42 +90,21 @@ ASSIGNMENT:		F_ASSIGNMENT | I_ASSIGNMENT | S_ASSIGNMENT
 
 F_ASSIGNMENT:	ID '=' FLOAT_OP ';' {
 					
-					if (!check_var_exist($1)) {
-						handlevMiss(@4.last_line, $1);
+					if (!handlevAssign($1, FLOAT_T, @4.last_line))
 						YYABORT;
-					}
-
-					if (!check_var_type($1, "float")) {
-						handlevType(@4.last_line, $1, "float");
-						YYABORT;
-					}
 				}
 				;
 
 I_ASSIGNMENT:	ID '=' INT_OP ';' {
 					
-					if (!check_var_exist($1)) {
-						handlevMiss(@4.last_line, $1);
+					if (!handlevAssign($1, INT_T, @4.last_line))
 						YYABORT;
-					}
-
-					if (!check_var_type($1, "int")) {
-						handlevType(@4.last_line, $1, "int");
-						YYABORT;
-					}
 				}
 
 S_ASSIGNMENT: 	ID '=' STRING ';' {
 					
-					if (!check_var_exist($1)) {
-						handlevMiss(@4.last_line, $1);
+					if (!handlevAssign($1, STRING_T, @4.last_line))
 						YYABORT;
-					}
-
-					if (!check_var_type($1, "string")) {
-						handlevType(@4.last_line, $1, "string");
-						YYABORT;
-					}
 				}
 
 ACTION:			INCREASE | DECREASE

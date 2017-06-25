@@ -3,8 +3,10 @@
 
 #include "vmanager.h"
 
-void handlevRep(int line, char * varname);
-void handlevMiss(int line, char * var_name);
-void handlevType(int line, char * var_name, char * wrongtype);
+bool handlevAssign(const char * var_name, const char * type, int line);
+bool handlevDeclare(const char * var_name, const char * type, int line);
+void handlevRep(const int line, const char * var_name);
+void handlevMiss(const int line, const char * var_name);
+void handlevInvtype(const int line, const char * var_name, const char * wrongtype);
 
 #endif
