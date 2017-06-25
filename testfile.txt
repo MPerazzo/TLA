@@ -1,8 +1,0 @@
-+12
-3
-palabra
-0
--16
--24
-palabra
-functionprobando()start
