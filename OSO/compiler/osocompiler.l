@@ -19,7 +19,9 @@ for			return FOR;
 if			return IF;
 while		return WHILE;
 
-integer		return INTEGER_TYPE;
+int			return INTEGER_TYPE;
+float 		return FLOAT_TYPE;
+string 		return STRING_TYPE;
 
 start 		return START;
 end			return END;
@@ -29,9 +31,15 @@ end			return END;
 				return INTEGER;
 			}
 
+{digit}+.{digit}+ { return FLOAT;}
+
 [a-zA-Z][a-zA-Z0-9]* 	{
 							yylval.string = strdup(yytext);
 							return ID;
+						}
+
+\"(\\.|[^\\"])*\" 		{
+							return STRING;
 						}
 
 "<="		return LE;

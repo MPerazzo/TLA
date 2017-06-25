@@ -14,15 +14,18 @@
 }
 
 %token RUN
-%token INTEGER_TYPE
+%token INTEGER_TYPE FLOAT_TYPE STRING_TYPE
 %token IF FOR WHILE START END
 %token LE GE EQ NE OR AND
 
+%token FLOAT
 %token <number> INTEGER
 %token <string> ID
+%token STRING
 
 %right "="
 %left OR AND
+%left '(' ')'
 %left '>' '<' LE GE EQ NE
 %left '+' '-'
 %left '*' '/'
@@ -35,12 +38,12 @@
 INIT: 			RUN P
 				;
 
-P:				STATEMENTS 
+P:				  STATEMENTS 
 				| P STATEMENTS 
 				;
 
 STATEMENTS:	
-		 		 DECLARATION
+		 		  DECLARATION
 				| ASSIGNMENT
 				| STIF
 				| STWHILE
@@ -63,7 +66,7 @@ STFOR:			FOR '[' C_DECLARATION ';' E ';' ACTION ']' BODY
 DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
 				;
 
-S_DECLARATION:	TYPE ID {
+S_DECLARATION:	INTEGER_TYPE ID | FLOAT_TYPE ID | STRING_TYPE ID {
 										
 					if (add_var($2)) {
 						handlevRep(@2.last_line, $2);
@@ -72,7 +75,8 @@ S_DECLARATION:	TYPE ID {
 				}
 				;
 
-C_DECLARATION:	TYPE ID '=' E {
+C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' FLOAT_OP | STRING_TYPE ID '=' STRING 
+				| STRING_TYPE ID '=' ID {
 										
 					if (add_var($2)) {
 						handlevRep(@4.last_line, $2);
@@ -81,7 +85,7 @@ C_DECLARATION:	TYPE ID '=' E {
 				}
 				;
 
-ASSIGNMENT:		ID '=' E ';' {
+ASSIGNMENT:		ID '=' FLOAT_OP ';' | ID '=' INT_OP ';' | ID '=' STRING ';' {
 					
 					if (!check_var_exist($1)) {
 						handlevMiss(@4.last_line, $1);
@@ -90,37 +94,69 @@ ASSIGNMENT:		ID '=' E ';' {
 				}
 				;
 
-TYPE:			INTEGER_TYPE
-				;
-
-VALUE:			INTEGER
-				;
-
 ACTION:			INCREASE | DECREASE
 
 INCREASE:		'+' '+' ID | ID '+' '+'
 
 DECREASE:		'-' '-' ID | ID '-' '-'
 
-BODY:		START STATEMENTS END
-		;
+BODY:			START STATEMENTS END
+				;
        
-E:		E '=' E
-		| E '<' E
-		| E '>' E
-		| E '+' E 
-		| E '-' E
-		| E '*' E
-		| E '/' E 
-		| E LE E
-		| E GE E
-		| E EQ E
-		| E NE E
-		| E OR E
-		| E AND E
-		| ID  
-		| VALUE
-		;
+E: 				E OR E
+				|  E AND E
+				| '(' E ')'
+				|  INT_E  
+				|  FLOAT_E
+				;
+
+INT_E:			
+				  INT_E '<'  INT_E
+				| INT_E '>'  INT_E
+				| INT_E  LE  INT_E
+				| INT_E  GE  INT_E
+				| INT_E  EQ  INT_E
+				| INT_E  NE  INT_E
+				| INT_E  OR  INT_E
+				| INT_E  AND INT_E
+				| '(' INT_E ')'
+				| ID  
+				| INTEGER
+				| INT_OP
+				;
+
+FLOAT_E:		  
+				  FLOAT_E '<'  FLOAT_E
+				| FLOAT_E '>'  FLOAT_E
+				| FLOAT_E LE   FLOAT_E
+				| FLOAT_E GE   FLOAT_E
+				| FLOAT_E EQ   FLOAT_E
+				| FLOAT_E NE   FLOAT_E
+				| FLOAT_E OR   FLOAT_E
+				| FLOAT_E AND  FLOAT_E
+				| '(' FLOAT_E ')'
+				| ID  
+				| FLOAT
+				| FLOAT_OP
+				;
+
+INT_OP:			  INT_OP  '+'  INT_OP 
+				| INT_OP '-'  INT_OP
+				| INT_OP '*'  INT_OP
+				| INT_OP '/'  INT_OP
+				| '(' INT_OP ')'
+				| ID
+				| INTEGER
+				;
+
+FLOAT_OP:		FLOAT_OP  '+' FLOAT_OP 
+				| FLOAT_OP '-' FLOAT_OP
+				| FLOAT_OP '*' FLOAT_OP
+				| FLOAT_OP '/' FLOAT_OP
+				| '(' FLOAT_OP ')'
+				| ID
+				| FLOAT
+				;
 
 %%
 

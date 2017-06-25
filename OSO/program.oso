@@ -1,28 +1,30 @@
 run-oso
 
-integer hola = 5;
+int hola = 5;
 
 if [100<1] start
-	integer v = 130;
-	integer v1 = 11;
+	int v = 130;
+	int v1 = 11;
 end
 
 if [100=1] start
-	integer h = 130;
+	int h = 130;
 
 	if [100>1] start
-		integer var1 = 130;
-		integer var2 = 11;
+		int var1 = 130;
+		int var2 = 11;
 	end
 
 end
 
-integer h1 = 137;
+int h1 = 137;
 
 while [v>v200] start
-	integer v10 = 11;
+	int v10 = 11;
 end
 
-for [integer asd=3 ; i<5 ; h1++] start
-	integer v11 = 11;
+for [int asd=3 ; i<5 ; h1++] start
+	int v11 = 11;
 end
+
+string asd = swhola;
