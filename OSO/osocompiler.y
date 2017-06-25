@@ -1,7 +1,12 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "ansioso.h"
+
+#include "tree.c"
+
+extern int yylex();
+void yyerror(const char *s);
+
 %}
 
 %union 
@@ -27,25 +32,18 @@
 %left '!'
 %start INIT
 
-
 %%
 
-INIT: 	RUN P
+INIT: 	RUN STATEMENTS 	{
+							struct Node* main = createMainNode("FUNCION");
+							printTree(main);
+						}
 		;
 
-P:		STATEMENTS 
-		| P STATEMENTS 
+STIF:		IF '[' E ']' BODY {createIfNode();}
 		;
 
-STIF:		IF '[' E ']' BODY
-		;
-
-V_INT:		INTEGER_TYPE ID '=' INTEGER ';'	{
-												printf("V_INT-> %s : %d\n",$2,$4);
-												int value = add_variable($2,$4);
-												if(value == DENIED)
-													return DENIED;
-											}
+V_INT:		INTEGER_TYPE ID '=' INTEGER ';'	{ createNewVariableIntegerNode($2,$4); }
 		;
 
 BODY:		START STATEMENTS END
@@ -64,7 +62,7 @@ E:		ID '=' E
 		| E '*' E
 		| E '/' E
 		| E '<' E
-		| E '>' E {}
+		| E '>' E 			{ createCMPNode(">"); }
 		| E LE E
 		| E GE E
 		| E EQ E
@@ -73,8 +71,8 @@ E:		ID '=' E
 		| E AND E
 		| E '+' '+' 
 		| E '-' '-'
-		| ID  
-		| INTEGER
+		| ID 				{}		
+		| INTEGER 			{ createIntegerNode($1); }
 		;
 
 %%

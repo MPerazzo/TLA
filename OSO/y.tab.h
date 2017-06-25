@@ -84,7 +84,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 8 "osocompiler.y" /* yacc.c:1909  */
+#line 13 "osocompiler.y" /* yacc.c:1909  */
 
         int number;
         char *string;

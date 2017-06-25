@@ -20,8 +20,6 @@ integer		return INTEGER_TYPE;
 start 		return START;
 end			return END;
 
-[ \t\n]		;
-
 
 {digit}+	{
 			yylval.number = atoi(yytext);

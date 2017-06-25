@@ -1,16 +1,10 @@
 run-oso
-integer hola = 5;
+integer var1 = 5;
 if [100>1] start
-	integer v = 130;
-	integer v1 = 11;
+	integer var2 = 130;
+	integer var3 = 11;
 end
-if [100>1] start
-	integer h = 130;
-
-	if [100>1] start
-		integer var1 = 130;
-		integer var2 = 11;
-	end
-
+if [500>1] start
+	integer var4 = 130;
 end
-integer h1 = 137;
+integer var5 = 137;

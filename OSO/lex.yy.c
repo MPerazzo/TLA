@@ -375,8 +375,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 18
-#define YY_END_OF_BUFFER 19
+#define YY_NUM_RULES 17
+#define YY_END_OF_BUFFER 18
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -386,11 +386,11 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[50] =
     {   0,
-        0,    0,   19,   17,    1,    1,   17,   17,    9,   17,
-       17,   17,   10,   10,   10,   10,   10,   10,   17,   14,
-       16,    9,   11,   13,   12,   10,   10,   10,    4,   10,
-       10,   10,   15,    7,    3,   10,   10,   10,   10,    0,
-       10,   10,    0,    6,   10,    0,    5,    2,    0
+        0,    0,   18,   16,    1,    1,   16,   16,    8,   16,
+       16,   16,    9,    9,    9,    9,    9,    9,   16,   13,
+       15,    8,   10,   12,   11,    9,    9,    9,    4,    9,
+        9,    9,   14,    7,    3,    9,    9,    9,    9,    0,
+        9,    9,    0,    6,    9,    0,    5,    2,    0
     } ;
 
 static yyconst YY_CHAR yy_ec[256] =
@@ -808,68 +808,62 @@ YY_RULE_SETUP
 return END;
 	YY_BREAK
 case 8:
-/* rule 8 can match eol */
 YY_RULE_SETUP
-#line 23 "osocompiler.l"
-;
-	YY_BREAK
-case 9:
-YY_RULE_SETUP
-#line 26 "osocompiler.l"
+#line 24 "osocompiler.l"
 {
 			yylval.number = atoi(yytext);
 			return INTEGER;
 			}
 	YY_BREAK
-case 10:
+case 9:
 YY_RULE_SETUP
-#line 31 "osocompiler.l"
+#line 29 "osocompiler.l"
 {
 						yylval.string = strdup(yytext);
 						return ID;
 						}
 	YY_BREAK
+case 10:
+YY_RULE_SETUP
+#line 34 "osocompiler.l"
+return LE;
+	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 36 "osocompiler.l"
-return LE;
+#line 35 "osocompiler.l"
+return GE;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 37 "osocompiler.l"
-return GE;
+#line 36 "osocompiler.l"
+return EQ;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 38 "osocompiler.l"
-return EQ;
+#line 37 "osocompiler.l"
+return NE;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 39 "osocompiler.l"
-return NE;
+#line 38 "osocompiler.l"
+return OR;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 40 "osocompiler.l"
-return OR;
+#line 39 "osocompiler.l"
+return AND;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 41 "osocompiler.l"
-return AND;
+#line 40 "osocompiler.l"
+return yytext[0];
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 42 "osocompiler.l"
-return yytext[0];
-	YY_BREAK
-case 18:
-YY_RULE_SETUP
-#line 44 "osocompiler.l"
 ECHO;
 	YY_BREAK
-#line 873 "lex.yy.c"
+#line 867 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1870,7 +1864,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 44 "osocompiler.l"
+#line 42 "osocompiler.l"
 
 
 
