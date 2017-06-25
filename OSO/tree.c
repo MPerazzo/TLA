@@ -46,6 +46,13 @@ struct Node* createNewVariableIntegerNode(char* name, int value){
 }
 
 struct Node* createIntegerNode(int value){
+	struct Node* n = createIntegerNodeNoToStack(value);
+	add(n);
+	return n;
+
+}
+
+struct Node* createIntegerNodeNoToStack(int value){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	n->type = INTEGERNODE;
@@ -56,7 +63,6 @@ struct Node* createIntegerNode(int value){
 	n->value = v;
 	n->tot_nodes = 0;
 
-	add(n);
 	return n;
 
 }
@@ -114,6 +120,70 @@ struct Node* createMainNode(char* function_name){
 	}
 
 	return main_node;
+
+}
+
+struct Node* createFromToNode(char* name, int from, int to){
+
+	struct Node* n = malloc(sizeof(struct Node));
+
+	if ( add_variable(name) == DENNIED ){
+		return n;
+	}
+
+	n->type=FROMTO;
+
+	addLeaves(n,createIntegerNodeNoToStack(from));
+	addLeaves(n,createIntegerNodeNoToStack(to));
+
+	add(n);
+	return n;
+
+}
+
+struct Node* createForNode(){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = FORNODE;
+
+	int condition_while = 0;
+
+	while(condition_while == 0){
+		struct Node* node_pop = pop();
+		
+		if(node_pop->type == FROMTO){
+			condition_while = 1;
+		}
+
+		addLeaves(n,node_pop);
+
+	}
+
+	add(n);
+	return n;
+}
+
+struct Node* createWhileNode(){
+
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = WHILENODE;
+
+	int condition_while = 0;
+
+	while(condition_while == 0){
+		struct Node* node_pop = pop();
+		
+		if(node_pop->type == CMP){
+			condition_while = 1;
+		}
+
+		addLeaves(n,node_pop);
+
+	}
+
+	add(n);
+	return n;
 
 }
 

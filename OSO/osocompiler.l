@@ -14,6 +14,8 @@ digit [0-9]
 run-oso		return RUN;
 for			return FOR;
 if			return IF;
+while 		return WHILE;
+loop		return LOOP;
 
 integer		return INTEGER_TYPE;
 

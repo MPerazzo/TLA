@@ -51,15 +51,17 @@ extern int yydebug;
     FOR = 261,
     START = 262,
     END = 263,
-    LE = 264,
-    GE = 265,
-    EQ = 266,
-    NE = 267,
-    OR = 268,
-    AND = 269,
-    INTEGER = 270,
-    ID = 271,
-    UMINUS = 273
+    WHILE = 264,
+    LOOP = 265,
+    LE = 266,
+    GE = 267,
+    EQ = 268,
+    NE = 269,
+    OR = 270,
+    AND = 271,
+    INTEGER = 272,
+    ID = 273,
+    UMINUS = 275
   };
 #endif
 /* Tokens.  */
@@ -69,15 +71,17 @@ extern int yydebug;
 #define FOR 261
 #define START 262
 #define END 263
-#define LE 264
-#define GE 265
-#define EQ 266
-#define NE 267
-#define OR 268
-#define AND 269
-#define INTEGER 270
-#define ID 271
-#define UMINUS 273
+#define WHILE 264
+#define LOOP 265
+#define LE 266
+#define GE 267
+#define EQ 268
+#define NE 269
+#define OR 270
+#define AND 271
+#define INTEGER 272
+#define ID 273
+#define UMINUS 275
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -89,7 +93,7 @@ union YYSTYPE
         int number;
         char *string;
 
-#line 93 "y.tab.h" /* yacc.c:1909  */
+#line 97 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

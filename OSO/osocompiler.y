@@ -17,7 +17,7 @@ void yyerror(const char *s);
 
 %token RUN
 %token INTEGER_TYPE
-%token IF FOR START END
+%token IF FOR START END WHILE LOOP
 %token LE GE EQ NE OR AND
 
 %token <number> INTEGER
@@ -40,20 +40,33 @@ INIT: 	RUN STATEMENTS 	{
 						}
 		;
 
-STIF:		IF '[' E ']' BODY {createIfNode();}
+STIF:		IF '[' E ']' BODY { createIfNode(); }
 		;
 
 V_INT:		INTEGER_TYPE ID '=' INTEGER ';'	{ createNewVariableIntegerNode($2,$4); }
 		;
 
-BODY:		START STATEMENTS END
+BODY:		START STATEMENTS END {}
 		;
+
+STFOR:		FOR COND_FOR BODY { createForNode(); }
+		;
+
+STWHILE:	WHILE '['E']' BODY { createWhileNode(); }
+		;
+
+COND_FOR: '[' ID '=' INTEGER ':' INTEGER ']' { createFromToNode($2,$4,$6); }
+
 
 STATEMENTS:	
 		  V_INT
 		| STIF
-		| STATEMENTS V_INT
-		| STATEMENTS STIF
+		| STFOR
+		| STWHILE
+		| V_INT STATEMENTS
+		| STIF STATEMENTS
+		| STFOR STATEMENTS
+		| STWHILE STATEMENTS { }
 		;
        
 E:		ID '=' E
@@ -62,7 +75,7 @@ E:		ID '=' E
 		| E '*' E
 		| E '/' E
 		| E '<' E
-		| E '>' E 			{ createCMPNode(">"); }
+		| E '>' E 			{ createCMPNode(">"); /*printf(">\n");*/ }
 		| E LE E
 		| E GE E
 		| E EQ E
@@ -71,8 +84,8 @@ E:		ID '=' E
 		| E AND E
 		| E '+' '+' 
 		| E '-' '-'
-		| ID 				{}		
-		| INTEGER 			{ createIntegerNode($1); }
+		| ID 				
+		| INTEGER 			{ createIntegerNode($1); /*printf("%d\n",$1);*/}
 		;
 
 %%

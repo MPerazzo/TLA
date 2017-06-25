@@ -1,10 +1,12 @@
 run-oso
-integer var1 = 5;
-if [100>1] start
-	integer var2 = 130;
-	integer var3 = 11;
+
+integer v1 = 5;
+while[500>1] start
+	integer v2 = 2;
+	if[1>1] start
+		for[var100=1:50] start
+			integer v54 = 32;
+		end
+	end
 end
-if [500>1] start
-	integer var4 = 130;
-end
-integer var5 = 137;
+integer v5 = 137;

@@ -4,7 +4,7 @@
 #define MAX_NODES 30
 #define MAX_LENGTH 100
 
-typedef enum {CMP, IFNODE, INTEGERNODE, VINT, MAIN} types;
+typedef enum {CMP, IFNODE, INTEGERNODE, VINT, MAIN, FROMTO, FORNODE, WHILENODE} types;
 
 struct Node {
 	types type;
@@ -22,3 +22,7 @@ struct Node* createIfNode();
 struct Node* createMainNode(char* function_name);
 void addLeaveAtPosition(struct Node* root, struct Node* leave, int pos);
 void addLeaves(struct Node* root, struct Node* leave);
+struct Node* createForNode();
+struct Node* createFromToNode(char* name, int from, int to);
+struct Node* createIntegerNodeNoToStack(int value);
+struct Node* createWhileNode();
