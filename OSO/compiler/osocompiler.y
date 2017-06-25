@@ -42,7 +42,7 @@ static const char FLOAT_T[] = "float";
 %%
 
 INIT: 			RUN P
-				;
+				
 
 P:				  STATEMENTS 
 				| P STATEMENTS 
@@ -68,25 +68,27 @@ STWHILE:		WHILE '[' E ']' BODY
 				;
 
 STFOR:			FOR '[' C_DECLARATION ';' E ';' ACTION ']' BODY
+				;
 
 DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
 				;
 
 S_DECLARATION:	INTEGER_TYPE ID | FLOAT_TYPE ID | STRING_TYPE ID {
-										
+				
 					if (!handlevDeclare($2, $1, @2.last_line))
 						YYABORT;
 				}
 				;
 
 C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' FLOAT_OP | STRING_TYPE ID '=' STRING | STRING_TYPE ID '=' ID {
-										
+
 					if (!handlevDeclare($2, $1, @4.last_line))
 						YYABORT;
 				}
 				; 
 
 ASSIGNMENT:		F_ASSIGNMENT | I_ASSIGNMENT | S_ASSIGNMENT
+				;
 
 F_ASSIGNMENT:	ID '=' FLOAT_OP ';' {
 					
@@ -100,18 +102,23 @@ I_ASSIGNMENT:	ID '=' INT_OP ';' {
 					if (!handlevAssign($1, INT_T, @4.last_line))
 						YYABORT;
 				}
+				;
 
 S_ASSIGNMENT: 	ID '=' STRING ';' {
 					
 					if (!handlevAssign($1, STRING_T, @4.last_line))
 						YYABORT;
 				}
+				;
 
 ACTION:			INCREASE | DECREASE
+				;
 
 INCREASE:		'+' '+' ID | ID '+' '+'
+				;
 
 DECREASE:		'-' '-' ID | ID '-' '-'
+				;
 
 BODY:			START STATEMENTS END
 				;

@@ -20,34 +20,26 @@ unsigned int hash_var(const char *key){
     return hash;
 }
 
-bool check_var_exist(const char * var_name){
+int check_var_exist(const char * var_name){
 
 	unsigned int hash_var_name = hash_var(var_name);
 
 	int i;	
 	for(i = 0 ; i < tot_vars; i++){
 		if (vars[i].hash == hash_var_name)
-			return false;
+			return i;
 	}
-	return true;
+	return -1;
 }
 
-bool check_var_type(const char * var_name, const char * type){
-
-	unsigned int hash_var_name = hash_var(var_name);
-
-	int i;	
-	for(i = 0 ; i < tot_vars; i++){
-		if (vars[i].hash == hash_var_name && !strcmp(type, vars[i].type))
-			return true;
-	}
-	return false;
-
+bool check_var_type(const char * var_name, const char * type, const int var_position){
+	return !strcmp(type, vars[var_position].type);
 }
 
 bool add_var(const char* var_name, const char * type){
 
-	if (check_var_exist(var_name))
+	// >0 var already exists
+	if (check_var_exist(var_name)>=0)
 		return false;
 
 	vars[tot_vars].hash = hash_var(var_name);

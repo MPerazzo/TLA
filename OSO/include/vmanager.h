@@ -11,8 +11,8 @@ typedef struct{
 }var;
 
 unsigned int hash_var(const char *key);
-bool check_var_exist(const char * var_name);
-bool check_var_type(const char * var_name, const char * type);
+int check_var_exist(const char * var_name);
+bool check_var_type(const char * var_name, const char * type, const int var_position);
 bool add_var(const char* var_name, const char* type);
 
 #endif

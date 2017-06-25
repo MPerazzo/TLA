@@ -3,12 +3,14 @@
 
 bool handlevAssign(const char * var_name, const char * type, int line) {
 
-	if (!check_var_exist(var_name)) {
+	int var_position;
+
+	if ((var_position = check_var_exist(var_name)) < 0) {
 		handlevMiss(line, var_name);
 		return false;
 	}
 
-	if (!check_var_type(var_name, type)) {
+	if (!check_var_type(var_name, type, var_position)) {
 		handlevInvtype(line, var_name, type);
 		return false;
 	}
@@ -22,7 +24,7 @@ bool handlevDeclare(const char * var_name, const char * type, int line) {
 		handlevRep(line, var_name);
 		return false;
 	}
-
+	printf("WTF\n");
 	return true;
 }
 

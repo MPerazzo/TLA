@@ -27,4 +27,5 @@ for [int asd=3 ; i<5 ; h1++] start
 	int v11 = 11;
 end
 
+h1 = "asd";
 string asd = swhola;
