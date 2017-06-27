@@ -14,6 +14,7 @@ digit [0-9]
 
 [\t \n]
 
+return		return RETURN;
 run-oso		return RUN;
 for			return FOR;
 if			return IF;

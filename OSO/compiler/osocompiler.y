@@ -16,7 +16,7 @@ static const char FLOAT_T[] = "float";
         char *string;
         char *type;
 }
-
+%token RETURN
 %token RUN
 %token <type> INTEGER_TYPE 
 %token <type> FLOAT_TYPE 
@@ -41,8 +41,12 @@ static const char FLOAT_T[] = "float";
 
 %%
 
-INIT: 			RUN P
-				
+INIT: 			RUN FUNCTIONS P
+				;
+
+FUNCTIONS:		  FUNCTIONS D_FUNCTION
+				| D_FUNCTION
+				;
 
 P:				  STATEMENTS 
 				| P STATEMENTS 
@@ -51,14 +55,11 @@ P:				  STATEMENTS
 STATEMENTS:	
 		 		  DECLARATION
 				| ASSIGNMENT
+				| RETURN OP
+				| C_FUNCTION
 				| STIF
 				| STWHILE
 				| STFOR
-				| STATEMENTS ASSIGNMENT
-				| STATEMENTS DECLARATION
-				| STATEMENTS STIF
-				| STATEMENTS STWHILE
-				| STATEMENTS STFOR
 				;
 
 STIF:			IF '[' E ']' BODY
@@ -67,48 +68,34 @@ STIF:			IF '[' E ']' BODY
 STWHILE:		WHILE '[' E ']' BODY
 				;
 
-STFOR:			FOR '[' C_DECLARATION ';' E ';' ACTION ']' BODY
+STFOR:			FOR '[' S_DECLARATION ';' E ';' ACTION ']' BODY
 				;
 
-DECLARATION:	S_DECLARATION ';' | C_DECLARATION ';'
+DECLARATION:	C_DECLARATION ';' | S_DECLARATION ';'
 				;
 
-S_DECLARATION:	INTEGER_TYPE ID | FLOAT_TYPE ID | STRING_TYPE ID {
-				
-					if (!handlevDeclare($2, $1, @2.last_line))
-						YYABORT;
-				}
+C_DECLARATION:	TYPE ID
 				;
 
-C_DECLARATION:	INTEGER_TYPE ID '=' INT_OP | FLOAT_TYPE ID '=' FLOAT_OP | STRING_TYPE ID '=' STRING | STRING_TYPE ID '=' ID {
+S_DECLARATION:  TYPE ID '=' OP
+				;
 
-					if (!handlevDeclare($2, $1, @4.last_line))
-						YYABORT;
-				}
+D_FUNCTION:		TYPE ID '('D_ARGS')' BODY
+				;
+
+C_FUNCTION:		ID'('C_ARGS')'
+				;
+
+C_ARGS:			OP | OP ',' C_ARGS
+				;
+
+D_ARGS:			TYPE ID | TYPE ID ',' D_ARGS
+				;
+
+TYPE:			INTEGER_TYPE | FLOAT_TYPE | STRING_TYPE
 				; 
 
-ASSIGNMENT:		F_ASSIGNMENT | I_ASSIGNMENT | S_ASSIGNMENT
-				;
-
-F_ASSIGNMENT:	ID '=' FLOAT_OP ';' {
-					
-					if (!handlevAssign($1, FLOAT_T, @4.last_line))
-						YYABORT;
-				}
-				;
-
-I_ASSIGNMENT:	ID '=' INT_OP ';' {
-					
-					if (!handlevAssign($1, INT_T, @4.last_line))
-						YYABORT;
-				}
-				;
-
-S_ASSIGNMENT: 	ID '=' STRING ';' {
-					
-					if (!handlevAssign($1, STRING_T, @4.last_line))
-						YYABORT;
-				}
+ASSIGNMENT:		ID '=' OP ';'
 				;
 
 ACTION:			INCREASE | DECREASE
@@ -120,62 +107,29 @@ INCREASE:		'+' '+' ID | ID '+' '+'
 DECREASE:		'-' '-' ID | ID '-' '-'
 				;
 
-BODY:			START STATEMENTS END
+BODY:			START P END
 				;
        
-E: 				E OR E
-				|  E AND E
-				| '(' E ')'
-				|  INT_E  
-				|  FLOAT_E
+E: 			      E OR E
+				| E AND E
+				| E '<' E
+				| E '>' E
+				| E LE E
+				| E GE E
+				| E EQ E
+				| E NE E
+				| OP
 				;
 
-INT_E:			
-				  INT_E '<'  INT_E
-				| INT_E '>'  INT_E
-				| INT_E  LE  INT_E
-				| INT_E  GE  INT_E
-				| INT_E  EQ  INT_E
-				| INT_E  NE  INT_E
-				| INT_E  OR  INT_E
-				| INT_E  AND INT_E
-				| '(' INT_E ')'
-				| ID  
-				| INTEGER
-				| INT_OP
-				;
-
-FLOAT_E:		  
-				  FLOAT_E '<'  FLOAT_E
-				| FLOAT_E '>'  FLOAT_E
-				| FLOAT_E LE   FLOAT_E
-				| FLOAT_E GE   FLOAT_E
-				| FLOAT_E EQ   FLOAT_E
-				| FLOAT_E NE   FLOAT_E
-				| FLOAT_E OR   FLOAT_E
-				| FLOAT_E AND  FLOAT_E
-				| '(' FLOAT_E ')'
-				| ID  
-				| FLOAT
-				| FLOAT_OP
-				;
-
-INT_OP:			  INT_OP  '+'  INT_OP 
-				| INT_OP '-'  INT_OP
-				| INT_OP '*'  INT_OP
-				| INT_OP '/'  INT_OP
-				| '(' INT_OP ')'
+OP:			  	  OP '+' OP 
+				| OP '-' OP
+				| OP '*' OP
+				| OP '/' OP
+				| '(' OP ')'
 				| ID
 				| INTEGER
-				;
-
-FLOAT_OP:		FLOAT_OP  '+' FLOAT_OP 
-				| FLOAT_OP '-' FLOAT_OP
-				| FLOAT_OP '*' FLOAT_OP
-				| FLOAT_OP '/' FLOAT_OP
-				| '(' FLOAT_OP ')'
-				| ID
 				| FLOAT
+				| STRING
 				;
 %%
 
