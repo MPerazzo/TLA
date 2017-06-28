@@ -8,6 +8,9 @@
 struct Node* stack[MAX_STACK_ELEMS];
 int position = 0;
 
+void add(struct Node* node);
+struct Node* pop();
+void printStack();
 
 void add(struct Node* node){
 	stack[position] = node;
@@ -20,8 +23,7 @@ struct Node* pop(){
 }
 
 void printStack(){
-	int i;
-	for(i = 0 ; i < position ; i++){
+	for(int i = 0 ; i < position ; i++){
 		printTree(stack[i]);
 	}
 	printf("\n");

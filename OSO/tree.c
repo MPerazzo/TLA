@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "variables.h"
-#include "stack.h"
+#include "tree.h"
+#include "variables.c"
+#include "stack.c"
+
 
 void printTree(struct Node* node){
 
 	int tot = node->tot_nodes;
 	printf("%s\n",printNode(node));
 
-	int i;
-	for(i = 0 ; i < tot ; i++){
+	for(int i = 0 ; i < tot ; i++){
 		printTree(node->nodes[i]);
 	}
 	
@@ -44,6 +45,26 @@ struct Node* createNewVariableIntegerNode(char* name, int value){
 	return n;
 }
 
+struct Node* createNewVariableStringNode(char* name, char* value){
+
+	struct Node* n = malloc(sizeof(struct Node));
+
+	if ( add_variable(name) == DENNIED ){
+		return n;
+	}
+
+	char* v;
+	v = malloc(sizeof(char) * MAX_LENGTH);
+	sprintf(v,"string %s = %s;",name, value);
+
+	n->type = VSTRING;
+	n->value = v;
+	n->tot_nodes = 0;
+
+	add(n);
+	return n;
+}
+
 struct Node* createIntegerNode(int value){
 	struct Node* n = createIntegerNodeNoToStack(value);
 	add(n);
@@ -66,17 +87,39 @@ struct Node* createIntegerNodeNoToStack(int value){
 
 }
 
-struct Node* createCMPNode(char* symbol){
+struct Node* createStringNode(char* v){
+	struct Node* n = createStringNodeNoToStack(v);
+	add(n);
+	return n;
+}
+
+struct Node* createStringNodeNoToStack(char* v){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = STRINGNODE;
+	n->value = v;
+	n->tot_nodes = 0;
+
+	return n;
+
+}
+
+struct Node* createVariableCreated(char* v){
+	struct Node* n = createStringNodeNoToStack(v);
+	n->type = VVAR;
+	return n;
+}
+
+
+struct Node* createCMPNode(char* symbol, struct Node* left, struct Node* right){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	n->type = CMP;
-	struct Node* int2 = pop();
-	struct Node* int1 = pop();
-	
+
 	n->value = symbol;
 	n->tot_nodes = 0;
-	addLeaves(n,int1);
-	addLeaves(n,int2);
+	addLeaves(n,left);
+	addLeaves(n,right);
 
 	add(n);
 
@@ -203,6 +246,89 @@ struct Node* createFunParam(char* t, char* name){
 
 	n->value = v;
 	n->tot_nodes = 0;
+
+	add(n);
+	return n;
+
+}
+
+struct Node* createReadNode(char* var_to_read){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = READNODE;
+	n->value = var_to_read;
+	n->tot_nodes = 0;
+
+	add(n);
+	return n;
+}
+
+struct Node* createShowNode(char* tipo, char* var_to_show){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = SHOWNODE;
+
+	char* v = malloc(sizeof(char) * MAX_LENGTH);
+	sprintf(v,"%s %s",tipo,var_to_show);
+	n->value = v;
+	n->tot_nodes = 0;
+
+	add(n);
+	return n;
+}
+
+struct Node* createSetIntegerNode(char* var_to_set, int val){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = SETNODE;
+	char* v = malloc(sizeof(char) * MAX_LENGTH);
+	sprintf(v,"%s = %d",var_to_set,val);
+	n->value = v;
+	n->tot_nodes = 0;
+
+	add(n);
+	return n;
+}
+
+struct Node* createSetStringNode(char* var_to_set, char* val){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = SETNODE;
+	char* v = malloc(sizeof(char) * MAX_LENGTH);
+	sprintf(v,"%s = %s",var_to_set,val);
+	n->value = v;
+	n->tot_nodes = 0;
+
+	add(n);
+	return n;
+}
+
+struct Node* createCMPAuxiliarNode(char* symbol){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = CMP;
+	n->value = symbol;
+	n->tot_nodes = 0;
+
+	struct Node* node_pop = pop();
+	addLeaves(n,node_pop);
+
+	add(n);
+	return n;
+
+}
+
+struct Node* createCMPAuxiliar2Node(char* symbol){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = CMP;
+	n->value = symbol;
+	n->tot_nodes = 0;
+
+	struct Node* node_pop1 = pop();
+	struct Node* node_pop2 = pop();
+	addLeaves(n,node_pop1);
+	addLeaves(n,node_pop2);
 
 	add(n);
 	return n;

@@ -1,12 +1,19 @@
 run-oso
 
-integer v1 = 5;
-while[500>1] start
-	integer v2 = 2;
-	if[1>1] start
-		for[var100=1:50] start
-			integer v54 = 32;
-		end
+function integer a start
+	integer a1 = 50;
+
+	if [ !(100 > 1) ] start
+		integer a2 = 10;
+		integer a4 = 5;
+		integer a10 = 100;
+		string hola = -abcddd-;
 	end
+
+	for[iterator = 5 : 10] start
+		:a:;
+		string hola2 = -te pruebo-;
+	end
+
+	integer a52  = 5;
 end
-integer v5 = 137;
