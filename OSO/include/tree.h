@@ -1,3 +1,6 @@
+#ifndef TREE_H
+#define TREE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,3 +29,5 @@ struct Node* createForNode();
 struct Node* createFromToNode(char* name, int from, int to);
 struct Node* createIntegerNodeNoToStack(int value);
 struct Node* createWhileNode();
+
+#endif
