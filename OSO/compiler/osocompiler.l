@@ -15,9 +15,12 @@ run-oso		return RUN;
 for			return FOR;
 if			return IF;
 while 		return WHILE;
-loop		return LOOP;
+function	return FUNCTION;
 
 integer		return INTEGER_TYPE;
+string		return STRING_TYPE;
+show		return SHOW;
+set 		return SET;
 
 start 		return START;
 end			return END;
@@ -31,6 +34,11 @@ end			return END;
 [a-zA-Z][a-zA-Z0-9]* 	{
 						yylval.string = strdup(yytext);
 						return ID;
+						}
+
+-[a-zA-Z0-9?! ]*- 		{
+						yylval.string = strdup(yytext);
+						return TEXT;
 						}
 
 "<="		return LE;

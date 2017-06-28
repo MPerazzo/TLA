@@ -1,13 +1,10 @@
-#ifndef TREE_H
-#define TREE_H
-
 #include <stdio.h>
 #include <stdlib.h>
 
 #define MAX_NODES 30
-#define MAX_LENGTH 100
+#define MAX_LENGTH 1000
 
-typedef enum {CMP, IFNODE, INTEGERNODE, VINT, MAIN, FROMTO, FORNODE, WHILENODE} types;
+typedef enum {CMP, IFNODE, INTEGERNODE, VINT, MAIN, FROMTO, FORNODE, WHILENODE, FUNPARAM} types;
 
 struct Node {
 	types type;
@@ -22,12 +19,11 @@ struct Node* createNewVariableIntegerNode(char* name, int value);
 struct Node* createIntegerNode(int value);
 struct Node* createCMPNode(char* symbol);
 struct Node* createIfNode();
-struct Node* createMainNode(char* function_name);
+struct Node* createMainNode(char* ret, char* function_name);
 void addLeaveAtPosition(struct Node* root, struct Node* leave, int pos);
 void addLeaves(struct Node* root, struct Node* leave);
 struct Node* createForNode();
 struct Node* createFromToNode(char* name, int from, int to);
 struct Node* createIntegerNodeNoToStack(int value);
 struct Node* createWhileNode();
-
-#endif
+struct Node* createFunParam(char* t, char* name);

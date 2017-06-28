@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "stack.h"
-#include "variables.h"
+#include "tree.h"
+#include "variables.c"
+#include "stack.c"
 
 
 void printTree(struct Node* node){
@@ -10,8 +11,7 @@ void printTree(struct Node* node){
 	int tot = node->tot_nodes;
 	printf("%s\n",printNode(node));
 
-	int i;
-	for(i = 0 ; i < tot ; i++){
+	for(int i = 0 ; i < tot ; i++){
 		printTree(node->nodes[i]);
 	}
 	
@@ -35,7 +35,7 @@ struct Node* createNewVariableIntegerNode(char* name, int value){
 
 	char* v;
 	v = malloc(sizeof(char) * MAX_LENGTH);
-	sprintf(v,"Integer %s = %d;",name, value);
+	sprintf(v,"int %s = %d;",name, value);
 
 	n->type = VINT;
 	n->value = v;
@@ -106,10 +106,14 @@ struct Node* createIfNode(){
 	return n;
 }
 
-struct Node* createMainNode(char* function_name){ 
+struct Node* createMainNode(char* ret, char* function_name){ 
 	struct Node* main_node = malloc(sizeof(struct Node));
 	main_node->type = MAIN;
-	main_node->value = function_name;
+	char* v;
+	v = malloc(sizeof(char) * MAX_LENGTH);
+	sprintf(v,"%s %s", ret, function_name);
+
+	main_node->value = v;
 
 	int t_nodes = get_tot_stack(); 
 
@@ -118,6 +122,8 @@ struct Node* createMainNode(char* function_name){
 		t_nodes--;
 		addLeaveAtPosition(main_node, node_pop, t_nodes);
 	}
+
+	clear_vars();
 
 	return main_node;
 
@@ -181,6 +187,23 @@ struct Node* createWhileNode(){
 		addLeaves(n,node_pop);
 
 	}
+
+	add(n);
+	return n;
+
+}
+
+struct Node* createFunParam(char* t, char* name){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = FUNPARAM;
+
+	char* v;
+	v = malloc(sizeof(char) * MAX_LENGTH);
+	sprintf(v,"%s %s", t, name);
+
+	n->value = v;
+	n->tot_nodes = 0;
 
 	add(n);
 	return n;

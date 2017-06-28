@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "stack.h"
+#include "stack.c"
 
-#define MAX_STACK_ELEMS 100
+#define MAX_STACK_ELEMS 500
 #define EMPTY_STACK 13
 
 
 struct Node* stack[MAX_STACK_ELEMS];
 int position = 0;
+
 
 void add(struct Node* node){
 	stack[position] = node;
@@ -20,8 +21,7 @@ struct Node* pop(){
 }
 
 void printStack(){
-	int i;
-	for(i = 0 ; i < position ; i++){
+	for(int i = 0 ; i < position ; i++){
 		printTree(stack[i]);
 	}
 	printf("\n");
