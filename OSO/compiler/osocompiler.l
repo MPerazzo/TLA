@@ -11,7 +11,8 @@ digit [0-9]
 
 [\t \n]
 
-run-oso		return RUN;
+RUNOSO		return RUN;
+EXITOSO		return EXIT;
 for			return FOR;
 if			return IF;
 while 		return WHILE;

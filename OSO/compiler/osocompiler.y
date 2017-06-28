@@ -16,7 +16,7 @@ void yyerror(const char *s);
         char *string;
 }
 
-%token RUN FUNCTION
+%token RUN FUNCTION EXIT
 %token INTEGER_TYPE STRING_TYPE 
 %token SHOW SET
 %token IF FOR START END WHILE
@@ -37,7 +37,7 @@ void yyerror(const char *s);
 
 %%
 
-INIT: 	RUN FUNS 	 	{ printf("OK\n"); }
+INIT: 	RUN FUNS EXIT	 	{ printf("OK\n"); }
 		;
 
 FUNS: 		FUN FUNS
@@ -47,6 +47,8 @@ FUNS: 		FUN FUNS
 FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 															struct Node* functionNode = createMainNode("int", $3);
 															printTree(functionNode);
+															printf("*************************\n");
+															printf("%s\n",functionNode->cconv);
 															}
 			| FUNCTION STRING_TYPE ID '[' PARAMS ']' BODY 	{
 
@@ -54,7 +56,8 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 			| FUNCTION INTEGER_TYPE ID BODY {
 												struct Node* functionNode = createMainNode("int", $3);
 												printTree(functionNode);
-												//printf("FUNCION %s\n",$3);
+												printf("*************************\n");
+												printf("%s\n",functionNode->cconv);
 											}
 
 			| FUNCTION STRING_TYPE ID BODY
@@ -82,13 +85,13 @@ STFOR:		FOR COND_FOR BODY		{ createForNode();
 									}
 			;
 
-STREAD:		':' ID ':' ';' { createReadNode($2); }
+STREAD:		':' ID ':' '.' { createReadNode($2); }
 			;
 
-STPRINT:	SHOW '(' INTEGER_TYPE ')' ID ';' { createShowNode("int",$5); }
-			| SHOW '(' STRING_TYPE ')' ID ';' { createShowNode("string",$5); }
-			| SHOW INTEGER ';' { /*TO DO*/ }
-			| SHOW TEXT ';' { createShowNode("string",$2); }
+STPRINT:	SHOW '(' INTEGER_TYPE ')' ID '.' { createShowNode("int",$5); }
+			| SHOW '(' STRING_TYPE ')' ID '.' { createShowNode("string",$5); }
+			| SHOW INTEGER '.' { /*TO DO*/ }
+			| SHOW TEXT '.' { createShowNode("string",$2); }
 			;
 
 COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ createFromToNode($2,$4,$6);
@@ -98,16 +101,16 @@ COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ createFromToNode($2,$4,$6);
 BODY:		START STATEMENTS END
 			;
 
-DECLARE_VAR: 	STRING_TYPE ID '=' TEXT ';'			{
+DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{
 														createNewVariableStringNode($2,$4);
 													}
-				| INTEGER_TYPE ID '=' INTEGER ';' 	{ 
+				| INTEGER_TYPE ID '=' INTEGER '.' 	{ 
 														createNewVariableIntegerNode($2,$4);
 													}
 				;
 
-CHANGE_VAR: 	SET ID INTEGER ';'	{ createSetIntegerNode($2,$3); }
-				| SET ID TEXT ';'	{ createSetStringNode($2,$3); }
+CHANGE_VAR: 	SET ID INTEGER '.'	{ createSetIntegerNode($2,$3); }
+				| SET ID TEXT '.'	{ createSetStringNode($2,$3); }
 				;
 
 STATEMENTS:	

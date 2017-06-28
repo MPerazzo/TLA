@@ -1,19 +1,21 @@
-run-oso
+RUNOSO
 
 function integer a start
-	integer a1 = 50;
+	integer a1 = 50.
 
 	if [ !(100 > 1) ] start
-		integer a2 = 10;
-		integer a4 = 5;
-		integer a10 = 100;
-		string hola = -abcddd-;
+		integer a2 = 10.
+		integer a4 = 5.
+		integer a10 = 100.
+		string hola = -abcddd-.
 	end
 
 	for[iterator = 5 : 10] start
-		:a:;
-		string hola2 = -te pruebo-;
+		:a:.
+		string hola2 = -te pruebo-.
 	end
 
-	integer a52  = 5;
+	integer a52  = 5.
 end
+
+EXITOSO

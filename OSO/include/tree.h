@@ -4,6 +4,8 @@
 #define MAX_NODES 30
 #define MAX_LENGTH 1000
 
+#define MAX_CCONV 10000
+
 typedef enum {CMP, IFNODE, INTEGERNODE, VINT, MAIN, FROMTO, 
 					FORNODE, WHILENODE, FUNPARAM, READNODE, 
 					SHOWNODE, VSTRING, STRINGNODE, VVAR, SETNODE} types;
@@ -13,6 +15,9 @@ struct Node {
 	char* value; //cambiar!! deberia ser algo mas generico
 	int tot_nodes;
 	struct Node* nodes[MAX_NODES];
+
+	char* cconv;
+
 };
 
 char* printNode(struct Node* n);
