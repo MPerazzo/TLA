@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "stack.c"
 
 #define MAX_STACK_ELEMS 500
 #define EMPTY_STACK 13
@@ -21,7 +20,8 @@ struct Node* pop(){
 }
 
 void printStack(){
-	for(int i = 0 ; i < position ; i++){
+	int i;
+	for(i = 0 ; i < position ; i++){
 		printTree(stack[i]);
 	}
 	printf("\n");

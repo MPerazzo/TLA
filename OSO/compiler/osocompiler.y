@@ -1,9 +1,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "tree.c"
-#include "convert.c"
+#include "variables.h"
 
 extern int yylex();
 void yyerror(const char *s);

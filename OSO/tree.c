@@ -1,17 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "tree.h"
-#include "variables.c"
-#include "stack.c"
-
+#include "variables.h"
+#include "stack.h"
 
 void printTree(struct Node* node){
 
 	int tot = node->tot_nodes;
 	printf("%s\n",printNode(node));
 
-	for(int i = 0 ; i < tot ; i++){
+	int i;
+	for(i = 0 ; i < tot ; i++){
 		printTree(node->nodes[i]);
 	}
 	
