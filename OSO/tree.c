@@ -5,6 +5,26 @@
 #include "dmanager.h"
 #include "stack.h"
 
+
+void printTree(struct Node* node){
+
+	int tot = node->tot_nodes;
+	printf("%s\n",printNode(node));
+
+	for(int i = 0 ; i < tot ; i++){
+		printTree(node->nodes[i]);
+	}
+	
+}
+
+char* printNode(struct Node* n){
+	printf("Entro a printNode");
+	char* to_ret;
+	to_ret = malloc(sizeof(char) * MAX_LENGTH);
+	sprintf(to_ret, "Type: %d - Value: %s - Total Leaves: %d",n->type,n->value,n->tot_nodes);
+	return to_ret;
+}
+
 struct Node* createNewVariableIntegerNode(char* name, int value){
 
 	struct Node* n = malloc(sizeof(struct Node));
@@ -21,9 +41,9 @@ struct Node* createNewVariableIntegerNode(char* name, int value){
 	n->value = v;
 	n->tot_nodes = 0;
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
 	sprintf(to_conv, "Integer %s = %d; \n", name, value);
-	n->cconv = to_conv;
+	n->jconv = to_conv;
 
 	add(n);
 	return n;
@@ -46,9 +66,9 @@ struct Node* createNewVariableStringNode(char* name, char* value){
 	n->tot_nodes = 0;
 
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
 	sprintf(to_conv, "String %s = \"%s\";\n", name, value);
-	n->cconv = to_conv;
+	n->jconv = to_conv;
 
 	add(n);
 	return n;
@@ -72,9 +92,9 @@ struct Node* createIntegerNodeNoToStack(int value){
 	n->value = v;
 	n->tot_nodes = 0;
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
 	sprintf(to_conv,"%d",value);
-	n->cconv = to_conv;
+	n->jconv = to_conv;
 
 	return n;
 
@@ -93,7 +113,7 @@ struct Node* createStringNodeNoToStack(char* v){
 	n->value = v;
 	n->tot_nodes = 0;
 
-	n->cconv = v;
+	n->jconv = v;
 
 	return n;
 
@@ -114,9 +134,9 @@ struct Node* createCMPNode(char* symbol, struct Node* left, struct Node* right){
 	n->value = symbol;
 	n->tot_nodes = 0;
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
-	sprintf(to_conv, "%s %s %s", left->cconv, symbol, right->cconv);
-	n->cconv = to_conv;
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
+	sprintf(to_conv, "%s %s %s", left->jconv, symbol, right->jconv);
+	n->jconv = to_conv;
 
 	addLeaves(n,left);
 	addLeaves(n,right);
@@ -144,16 +164,16 @@ struct Node* createIfNode(){
 
 	}
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
-	sprintf(to_conv, "if ( %s ){ \n", n->nodes[n->tot_nodes - 1]->cconv);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
+	sprintf(to_conv, "if ( %s ){ \n", n->nodes[n->tot_nodes - 1]->jconv);
 	
 	int i;
 	for(i = n->tot_nodes - 2 ; i >= 0; i--){
-		sprintf(to_conv, "%s %s", to_conv, n->nodes[i]->cconv); //OJO ACA!!! HAY QUE REVISARLO!!!
+		sprintf(to_conv, "%s %s", to_conv, n->nodes[i]->jconv); //OJO ACA!!! HAY QUE REVISARLO!!!
 	}
 
 	sprintf(to_conv, "%s %s \n", to_conv, "}");
-	n->cconv = to_conv;
+	n->jconv = to_conv;
 
 	add(n);
 	return n;
@@ -170,7 +190,7 @@ struct Node* createMainNode(char* ret, char* function_name){
 
 	int t_nodes = get_tot_stack(); 
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
 	if (strcmp(function_name,"main") == 0 ){
 		sprintf(to_conv, "public static void main(String[] args) { \n");	
 	} else {
@@ -185,11 +205,11 @@ struct Node* createMainNode(char* ret, char* function_name){
 
 	int i;
 	for(i = 0 ; i < main_node->tot_nodes ; i++){
-		sprintf(to_conv,"%s %s", to_conv, main_node->nodes[i]->cconv);
+		sprintf(to_conv,"%s %s", to_conv, main_node->nodes[i]->jconv);
 	}
 
 	sprintf(to_conv,"%s %s\n",to_conv,"}");
-	main_node->cconv = to_conv;
+	main_node->jconv = to_conv;
 
 	clear_vars();
 
@@ -210,9 +230,9 @@ struct Node* createFromToNode(char* name, int from, int to){
 	addLeaves(n,createIntegerNodeNoToStack(from));
 	addLeaves(n,createIntegerNodeNoToStack(to));
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
 	sprintf(to_conv,"int %s = %d ; %s < %d ; %s++",name,from,name,to,name);
-	n->cconv = to_conv;
+	n->jconv = to_conv;
 
 	add(n);
 	return n;
@@ -238,16 +258,16 @@ struct Node* createForNode(){
 	}
 
 	int tot_elems = n->tot_nodes;
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
-	sprintf(to_conv,"for ( %s ) { \n", n->nodes[tot_elems - 1]->cconv);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
+	sprintf(to_conv,"for ( %s ) { \n", n->nodes[tot_elems - 1]->jconv);
 
 	int i;
 	for(i = tot_elems - 2 ; i >= 0 ; i--){
-		sprintf(to_conv,"%s %s",to_conv,n->nodes[i]->cconv);
+		sprintf(to_conv,"%s %s",to_conv,n->nodes[i]->jconv);
 	}
 
 	sprintf(to_conv,"%s %s\n",to_conv,"}");
-	n->cconv = to_conv;
+	n->jconv = to_conv;
 
 	add(n);
 	return n;
@@ -301,9 +321,9 @@ struct Node* createReadNode(char* var_to_read){
 	n->value = var_to_read;
 	n->tot_nodes = 0;
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
 	sprintf(to_conv,"scanf();\n");
-	n->cconv = to_conv;
+	n->jconv = to_conv;
 
 	add(n);
 	return n;
@@ -319,8 +339,8 @@ struct Node* createShowNode(char* tipo, char* var_to_show){
 	n->value = v;
 	n->tot_nodes = 0;
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
-	n->cconv = to_conv;	
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
+	n->jconv = to_conv;	
 
 	add(n);
 	return n;
@@ -335,9 +355,9 @@ struct Node* createSetIntegerNode(char* var_to_set, int val){
 	n->value = v;
 	n->tot_nodes = 0;
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
 	sprintf(to_conv,"%s = %d\n",var_to_set,val);
-	n->cconv = to_conv;	
+	n->jconv = to_conv;	
 
 	add(n);
 	return n;
@@ -352,9 +372,9 @@ struct Node* createSetStringNode(char* var_to_set, char* val){
 	n->value = v;
 	n->tot_nodes = 0;
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
 	sprintf(to_conv,"setString();\n");
-	n->cconv = to_conv;	
+	n->jconv = to_conv;	
 
 	add(n);
 	return n;
@@ -370,9 +390,9 @@ struct Node* createCMPAuxiliarNode(char* symbol){
 	struct Node* node_pop = pop();
 	addLeaves(n,node_pop);
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
-	sprintf(to_conv,"%s ( %s )",symbol, node_pop->cconv);
-	n->cconv = to_conv;	
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
+	sprintf(to_conv,"%s ( %s )",symbol, node_pop->jconv);
+	n->jconv = to_conv;	
 
 	add(n);
 	return n;
@@ -391,9 +411,9 @@ struct Node* createCMPAuxiliar2Node(char* symbol){
 	addLeaves(n,node_pop1);
 	addLeaves(n,node_pop2);
 
-	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
-	sprintf(to_conv,"%s  %s %s\n",node_pop1->cconv,symbol,node_pop2->cconv);
-	n->cconv = to_conv;	
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
+	sprintf(to_conv,"%s  %s %s\n",node_pop1->jconv,symbol,node_pop2->jconv);
+	n->jconv = to_conv;	
 
 	add(n);
 	return n;

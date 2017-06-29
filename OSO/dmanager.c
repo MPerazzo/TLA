@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dmanager.h"
+#include "stack.h"
+#include "joutput.h"
 
 unsigned int vars_names[MAX_VARIABLES] = {0};
 unsigned int functions_names[MAX_FUNCTIONS] = {0};
@@ -114,7 +116,7 @@ int add_function(char* function_name){
 	}
 
 	int hash = create_hash(function_name);
-	printf("el HASH de %s : %d\n",function_name,hash);
+	//printf("el HASH de %s : %d\n",function_name,hash);
 	functions_names[tot_functions_defined] = hash;
 	tot_functions_defined++;
 	return ACCEPTED;
@@ -124,10 +126,19 @@ int add_function(char* function_name){
 int check_main_exist(){
 	int i = 0;
 	int hash_main = create_hash("main");
-	printf("en check_main_exist: %d\n",hash_main);
-	for( i = 0 ; i < tot_var_defined ; i++){
+	//printf("en check_main_exist: %d\n",hash_main);
+	for( i = 0 ; i < tot_functions_defined ; i++){
 		if( functions_names[i] == hash_main )
 			return ACCEPTED;
 	}
 	return DENNIED;
+}
+
+void to_ret_functions(){
+	int c = get_tot_functions();
+
+	for(int i = 0 ; i < c ; i++){
+		printf("%s\n",pop_function_stack()->jconv);
+	}
+
 }
