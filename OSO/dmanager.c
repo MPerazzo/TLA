@@ -87,6 +87,10 @@ void printIDNotFound(char* id){
 	printf("Variable %s was not found\n",id);
 }
 
+void printFunctionNotFound(char* function_name){
+	printf("Function %s not created\n",function_name);
+}
+
 void printIDAlreadyCreated(char* id){
 	printf("Variable %s was initialized before\n",id);
 }
@@ -126,7 +130,7 @@ int add_function(char* function_name){
 int check_main_exist(){
 	int i = 0;
 	int hash_main = create_hash("main");
-	//printf("en check_main_exist: %d\n",hash_main);
+
 	for( i = 0 ; i < tot_functions_defined ; i++){
 		if( functions_names[i] == hash_main )
 			return ACCEPTED;

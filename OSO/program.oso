@@ -2,26 +2,12 @@ RUNOSO
 
 function integer main start
 	integer a1 = 50.
-
-	if [ !(a1 > 1) ] start
-		integer a2 = 10.
-		string alo = -como andan-.
-		integer a4 = 5.
-		integer a10 = 100.
-		&a10&.
-		&-pruebo lo siguiente sjasask-&.
-		&line&.
-		integer aaa = 3.
-		set a10 5.
-	end
-
-	for[iterator = 5 : 10] start
-		&iterator&.
-		integer loso = 0.
-		:loso:.
-	end
-
-	integer a52  = 5.
+	integer hola = (10 + 50).
+	string a = -como anda-.
+	&a1&.
+	set hola 53 + 1 .
+	
 end
+
 
 EXITOSO

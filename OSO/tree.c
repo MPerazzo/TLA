@@ -49,6 +49,28 @@ struct Node* createNewVariableIntegerNode(char* name, int value){
 	return n;
 }
 
+struct Node* createNewVariableInteger2Node(char* name){
+
+	struct Node* n = malloc(sizeof(struct Node));
+
+	if ( add_variable(name) == DENNIED ){
+		return n;
+	}
+
+	n->type = VINT;
+	n->value = name;
+	n->tot_nodes = 0;
+
+	struct Node* node_pop = pop();
+
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv, "Integer %s = %s; \n", name, node_pop->jconv);
+	n->jconv = to_conv;
+
+	add(n);
+	return n;
+}
+
 struct Node* createNewVariableStringNode(char* name, char* value){
 
 	struct Node* n = malloc(sizeof(struct Node));
@@ -390,6 +412,23 @@ struct Node* createSetIntegerNode(char* var_to_set, int val){
 	return n;
 }
 
+struct Node* createSetInteger2Node(char* var_to_set){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = SETNODE;
+	n->value = "set node";
+	n->tot_nodes = 0;
+
+	struct Node* node_pop = pop();
+
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv,"%s = %s;\n",var_to_set,node_pop->jconv);
+	n->jconv = to_conv;	
+
+	add(n);
+	return n;
+}
+
 struct Node* createSetStringNode(char* var_to_set, char* val){
 	struct Node* n = malloc(sizeof(struct Node));
 
@@ -439,7 +478,60 @@ struct Node* createCMPAuxiliar2Node(char* symbol){
 	addLeaves(n,node_pop2);
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
-	sprintf(to_conv,"%s  %s %s\n",node_pop1->jconv,symbol,node_pop2->jconv);
+	sprintf(to_conv,"%s %s %s\n",node_pop1->jconv,symbol,node_pop2->jconv);
+	n->jconv = to_conv;	
+
+	add(n);
+	return n;
+
+}
+
+struct Node* createCallFunctionNode(char* function_name){
+	struct Node* n = malloc (sizeof(struct Node));
+
+	n->type = CALLFUNCTION;
+	n->value = function_name;
+	n->tot_nodes = 0;
+
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv,"%s();\n",function_name);
+	n->jconv = to_conv;	
+
+	add(n);
+	return n;
+
+}
+
+struct Node* createParenthesisNode(){
+	struct Node* n = malloc (sizeof(struct Node));
+
+	n->type = OP_INT;
+	n->value = "()";
+	n->tot_nodes = 1;
+
+	struct Node* node_pop = pop();
+
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv,"(%s)",node_pop->jconv);
+	n->jconv = to_conv;	
+
+	add(n);
+	return n;
+
+}
+
+struct Node* createOPNode(char* symbol){
+	struct Node* n = malloc (sizeof(struct Node));
+
+	n->type = OP_INT;
+	n->value = symbol;
+	n->tot_nodes = 1;
+
+	struct Node* node_pop1 = pop();
+	struct Node* node_pop2 = pop();
+
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv,"%s %s %s",node_pop2->jconv, symbol, node_pop1->jconv);
 	n->jconv = to_conv;	
 
 	add(n);

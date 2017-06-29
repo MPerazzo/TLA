@@ -17,5 +17,7 @@ int add_function(char* function_name);
 int check_main_exist();
 void printIDAlreadyCreated(char* id);
 void to_ret_functions();
+void printFunctionNotFound(char* function_name);
+
 
 #endif

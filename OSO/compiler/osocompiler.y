@@ -20,7 +20,7 @@ void yyerror(const char *s);
 
 %token RUN FUNCTION EXIT
 %token INTEGER_TYPE STRING_TYPE 
-%token SHOW SET LINE
+%token SET LINE CALL
 %token IF FOR START END WHILE
 
 %token <number> INTEGER
@@ -115,6 +115,15 @@ STREAD:		':' ID ':' '.' 	{
 							}
 			;
 
+STFUNCTION:	CALL ID '.'	{
+							if( check_function_exist($2)== ACCEPTED )
+								createCallFunctionNode($2);
+							else {
+								printFunctionNotFound($2);
+								return DENNIED;
+							}
+						}	
+
 STPRINT:	'&' ID '&''.'					 	{	if(check($2) == ACCEPTED)
 														createShowStringNode($2, DENNIED);
 													else{
@@ -147,8 +156,8 @@ DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{	if(check($2) == DENNIED)
 															return DENNIED;
 														}
 													}
-				| INTEGER_TYPE ID '=' INTEGER '.' 	{ 	if(check($2) == DENNIED)
-															createNewVariableIntegerNode($2,$4);
+				| INTEGER_TYPE ID '=' INT_OPS '.' 	{ 	if(check($2) == DENNIED)
+															createNewVariableInteger2Node($2);
 														else{
 															printIDAlreadyCreated($2);
 															return DENNIED;
@@ -156,9 +165,10 @@ DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{	if(check($2) == DENNIED)
 													}
 				;
 
-CHANGE_VAR: 	SET ID INTEGER '.'	{ 	if( check($2) == ACCEPTED )
-											createSetIntegerNode($2,$3);
-										else{
+CHANGE_VAR: 	SET ID INT_OPS '.'	{ 	if( check($2) == ACCEPTED ){
+											createSetInteger2Node($2);
+											printf("SET");
+										} else {
 											printIDNotFound($2);
 											return DENNIED;
 										}
@@ -172,22 +182,48 @@ CHANGE_VAR: 	SET ID INTEGER '.'	{ 	if( check($2) == ACCEPTED )
 									}
 				;
 
-STATEMENTS:	
-			  DECLARE_VAR
-			| STIF
-			| STFOR
-			| STWHILE
-			| STREAD
-			| STPRINT
-			| CHANGE_VAR
-			| DECLARE_VAR STATEMENTS
-			| STIF STATEMENTS
-			| STFOR STATEMENTS
-			| STWHILE STATEMENTS
-			| STREAD STATEMENTS
-			| STPRINT STATEMENTS
-			| CHANGE_VAR STATEMENTS
-			;
+STATEMENTS:		DECLARE_VAR
+				| STIF
+				| STFOR
+				| STWHILE
+				| STREAD
+				| STPRINT
+				| CHANGE_VAR
+				| STFUNCTION
+				| DECLARE_VAR STATEMENTS
+				| STIF STATEMENTS
+				| STFOR STATEMENTS
+				| STWHILE STATEMENTS
+				| STREAD STATEMENTS
+				| STPRINT STATEMENTS
+				| CHANGE_VAR STATEMENTS
+				| STFUNCTION STATEMENTS
+				;
+
+INT_OPS:		INT_OPS '+' INT_OPS			{
+												createOPNode("+");
+												printf("+\n");
+											}
+				| INT_OPS '-' INT_OPS		{
+												createOPNode("-");
+												printf("-\n");
+											}
+				| INT_OPS '*' INT_OPS		{
+												createOPNode("*");
+												printf("*\n");
+											}
+				| INT_OPS '/' INT_OPS		{
+												createOPNode("/");
+												printf("/\n");
+											}
+				| '(' INT_OPS ')'			{
+												createParenthesisNode();
+												printf("()\n");
+											}
+				| INTEGER 					{
+												createIntegerNode($1);
+												printf("%d\n",$1);
+											}
        
 BOOL_CONDITION: 
 				INTEGER '>' INTEGER 			{
@@ -238,9 +274,9 @@ BOOL_CONDITION:
 													if (check($4) == DENNIED) {printIDNotFound($4); return DENNIED;}
 													createCMPNode("==",createIntegerNodeNoToStack($1), createVariableCreated($4));
 												}
-				;
+				;		
 
-BOOLEANS:	'!' '(' BOOL_CONDITION ')' 							{ createCMPAuxiliarNode("!"); }
+BOOLEANS:	'!' '(' BOOL_CONDITION ')' 							{ createCMPAuxiliarNode("!"); } //quiza aca, en yacc en vez de trabajar con BOOL_CONDITION me convenga trabajar con BOOLEANS
 			| '(' BOOL_CONDITION '&''&' BOOL_CONDITION ')'		{ createCMPAuxiliar2Node("&&"); }
 			| '(' BOOL_CONDITION '|''|' BOOL_CONDITION ')'		{ createCMPAuxiliar2Node("||"); }
 			| BOOL_CONDITION
