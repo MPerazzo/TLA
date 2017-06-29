@@ -3,7 +3,7 @@
 
 #define MAX_NODES 30
 #define MAX_LENGTH 1000
-#define MAX_CCONV 10000
+#define MAX_jconv 10000
 
 typedef enum {CMP, IFNODE, INTEGERNODE, VINT, MAIN, FROMTO, 
 					FORNODE, WHILENODE, FUNPARAM, READNODE, 
@@ -15,12 +15,13 @@ struct Node {
 	int tot_nodes;
 	struct Node* nodes[MAX_NODES];
 
-	char* cconv;
+	char* jconv;
 
 };
 
 char* printNode(struct Node* n);
 void printTree(struct Node* node);
+
 struct Node* createNewVariableIntegerNode(char* name, int value);
 struct Node* createIntegerNode(int value);
 struct Node* createCMPNode(char* symbol, struct Node* left, struct Node* right);

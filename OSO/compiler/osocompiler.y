@@ -5,6 +5,7 @@
 #include "dmanager.h"
 #include "tree.h"
 #include "joutput.h"
+#include "stack.h"
 
 extern int yylex();
 void yyerror(const char *s);
@@ -37,11 +38,15 @@ void yyerror(const char *s);
 
 %%
 
-INIT: 	RUN FUNS EXIT	 	{ 
-								if( check_main_exist() == ACCEPTED )
-									printf("OK\n");
-								else
-									printf("MAIN NOT CREATED\n");
+INIT: 	RUN FUNS EXIT	 	{ 	
+								if( check_main_exist() == ACCEPTED ){
+									printf("Compiled OSO\n");
+									return ACCEPTED;
+
+								} else{
+									printf("Function MAIN missing!\n");
+									return DENNIED;
+								}
 							}
 		;
 
@@ -63,8 +68,9 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 													printf("Function %s already defined previously\n",$3);
 													return DENNIED;
 												}
-												add_function($3);
-												output(functionNode->cconv);
+												add_function($3); //agrega la funcion al dmanager
+												add_function_stack(functionNode);
+												//output(functionNode->jconv);
 											}
 
 			| FUNCTION STRING_TYPE ID BODY	{
@@ -74,7 +80,8 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 													return DENNIED;
 												}
 												add_function($3);
-												output(functionNode->cconv);
+												add_function_stack(functionNode);
+												//output(functionNode->jconv);
 											}
 
 			;
@@ -103,20 +110,26 @@ STFOR:		FOR COND_FOR BODY		{ createForNode();
 STREAD:		':' ID ':' '.' 	{ 
 								if(check($2) == ACCEPTED)
 									createReadNode($2);
-								else
+								else{
 									printIDNotFound($2);
+									return DENNIED;
+								}
 							}
 			;
 
 STPRINT:	SHOW '(' INTEGER_TYPE ')' ID '.' 	{	if(check($5) == ACCEPTED)
 														createShowNode("int",$5);
-													else
+													else{
 														printIDNotFound($5);
+														return DENNIED;
+													}
 												}
 			| SHOW '(' STRING_TYPE ')' ID '.' 	{	if(check($5) == ACCEPTED)
 														createShowNode("string",$5);
-													else
+													else{
 														printIDNotFound($5);
+														return DENNIED;
+													}
 												}
 			| SHOW INTEGER '.' 					{ /*TO DO*/
 												}
@@ -133,25 +146,33 @@ BODY:		START STATEMENTS END
 
 DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{	if(check($2) == DENNIED)
 															createNewVariableStringNode($2,$4);
-														else
+														else{
 															printIDAlreadyCreated($2);
+															return DENNIED;
+														}
 													}
 				| INTEGER_TYPE ID '=' INTEGER '.' 	{ 	if(check($2) == DENNIED)
 															createNewVariableIntegerNode($2,$4);
-														else
+														else{
 															printIDAlreadyCreated($2);
+															return DENNIED;
+														}
 													}
 				;
 
 CHANGE_VAR: 	SET ID INTEGER '.'	{ 	if( check($2) == ACCEPTED )
 											createSetIntegerNode($2,$3);
-										else
+										else{
 											printIDNotFound($2);
+											return DENNIED;
+										}
 									}
 				| SET ID TEXT '.'	{	if( check($2) == ACCEPTED )
 									 		createSetStringNode($2,$3);
-									 	else
+									 	else{
 									 		printIDNotFound($2);
+									 		return DENNIED;
+									 	}
 									}
 				;
 
@@ -237,9 +258,16 @@ int yywrap()
 } 
 
 int main() {
-    //printf("Enter the expression:\n");
-    outputinit();
-    yyparse();
-    outputfinish(); 
+
+    int ret = yyparse();
+
+    if (ret == ACCEPTED){
+    	outputinit();
+		output("public class output {\n");
+    	to_ret_functions();
+    	output("}\n");
+    	outputfinish(); 
+    }
+
 } 
 
