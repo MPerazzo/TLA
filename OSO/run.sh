@@ -2,4 +2,4 @@
 mv output.java output
 cd output
 javac -g output.java
-java output
+java -classpath : output
