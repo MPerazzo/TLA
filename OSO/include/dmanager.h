@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef DMANAGER_H
+#define DAMANGER_H
 
 #define MAX_VARIABLES 100
 #define MAX_FUNCTIONS 100
@@ -14,3 +14,5 @@ int check(char* id);
 void printIDNotFound(char* id);
 int check_function_exist(char* function_name);
 int add_function(char* function_name);
+
+#endif

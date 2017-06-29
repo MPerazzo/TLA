@@ -5,26 +5,6 @@
 #include "dmanager.h"
 #include "stack.h"
 
-void printTree(struct Node* node){
-
-	int tot = node->tot_nodes;
-	printf("%s\n",printNode(node));
-
-	int i;
-	for(i = 0 ; i < tot ; i++){
-		printTree(node->nodes[i]);
-	}
-	
-}
-
-char* printNode(struct Node* n){
-	printf("Entro a printNode");
-	char* to_ret;
-	to_ret = malloc(sizeof(char) * MAX_LENGTH);
-	sprintf(to_ret, "Type: %d - Value: %s - Total Leaves: %d",n->type,n->value,n->tot_nodes);
-	return to_ret;
-}
-
 struct Node* createNewVariableIntegerNode(char* name, int value){
 
 	struct Node* n = malloc(sizeof(struct Node));
@@ -340,7 +320,6 @@ struct Node* createShowNode(char* tipo, char* var_to_show){
 	n->tot_nodes = 0;
 
 	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
-	sprintf(to_conv,"printf();\n");
 	n->cconv = to_conv;	
 
 	add(n);

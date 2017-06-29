@@ -4,6 +4,7 @@
 
 #include "dmanager.h"
 #include "tree.h"
+#include "joutput.h"
 
 extern int yylex();
 void yyerror(const char *s);
@@ -36,7 +37,9 @@ void yyerror(const char *s);
 
 %%
 
-INIT: 	RUN FUNS EXIT	 	{ printf("OK\n"); }
+INIT: 	RUN FUNS EXIT	 	{ 
+								printf("OK\n");
+							}
 		;
 
 FUNS: 		FUN FUNS
@@ -57,7 +60,7 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 													printf("Function %s already defined previously\n",$3);
 													return DENNIED;
 												}
-												printf("%s\n",functionNode->cconv);
+												output(functionNode->cconv);
 											}
 
 			| FUNCTION STRING_TYPE ID BODY	{
@@ -66,7 +69,7 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 													printf("Function %s already defined previously\n",$3);
 													return DENNIED;
 												}
-												printf("%s\n",functionNode->cconv);
+												output(functionNode->cconv);
 											}
 
 			;
@@ -208,6 +211,8 @@ int yywrap()
 
 int main() {
     //printf("Enter the expression:\n");
+    outputinit();
     yyparse();
+    outputfinish(); 
 } 
 
