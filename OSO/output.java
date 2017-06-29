@@ -15,8 +15,8 @@ public static void main(String[] args) {
  } 
  for ( int iterator = 5 ; iterator < 10 ; iterator++ ) { 
  System.out.print(iterator);
- Integer a = 0; 
- scanf();
+ Integer loso = 0; 
+ Scanner _v_loso_s_ = new Scanner(System.in); String _v_loso_s_aux_ = _v_loso_s_.next(); try { loso = Integer.parseInt(_v_loso_s_aux_); } catch (Exception e) { System.out.println("Compilation Ended"); }
  }
  Integer a52 = 5; 
  }

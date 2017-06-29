@@ -17,8 +17,8 @@ function integer main start
 
 	for[iterator = 5 : 10] start
 		&iterator&.
-		integer a = 0.
-		:a:.
+		integer loso = 0.
+		:loso:.
 	end
 
 	integer a52  = 5.

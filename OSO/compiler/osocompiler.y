@@ -99,7 +99,7 @@ STIF:		IF '[' BOOLEANS ']' BODY	{ createIfNode();
 			;
 
 STWHILE:	WHILE '[' BOOLEANS ']' BODY 	{ createWhileNode();
-											}
+			;								}
 
 STFOR:		FOR COND_FOR BODY		{ createForNode();
 									}
