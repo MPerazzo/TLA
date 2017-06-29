@@ -2,16 +2,15 @@
 #include <stdlib.h>
 #include "dmanager.h"
 
-unsigned int vars_names[MAX_VARIABLES] = {0};
-unsigned int functions_names[MAX_FUNCTIONS] = {0};
-
-int tot_functions_defined = 0;
-int tot_var_defined = 0;
-
 unsigned int create_hash(char *key){
     unsigned int hash, i;
-    int len = 10;
-    for(hash = i = 0; i < 10; ++i){
+
+    int counter = 0;
+    while(key[counter] != '\0'){
+    	counter++;
+    }
+
+    for(hash = i = 0; i < counter; ++i){
         hash += key[i];
         hash += (hash << 10);
         hash ^= (hash >> 6);
@@ -29,8 +28,7 @@ int check_var_exist(unsigned int hash_var_name){
 		return ACCEPTED;
 	}
 
-	int i;
-	for(i = 0 ; i < tot_var_defined; i++){
+	for(int i = 0 ; i < tot_var_defined; i++){
 		if( vars_names[i] == hash_var_name ){
 			return DENNIED;
 		}
@@ -38,11 +36,13 @@ int check_var_exist(unsigned int hash_var_name){
 	return ACCEPTED;
 }
 
+/*
+Me dice si la variable fue creada previamente
+*/
 int check(char* id){
 	int hash = create_hash(id);
 	
-	int i;
-	for(i = 0 ; i < tot_var_defined ; i++){
+	for(int i = 0 ; i < tot_var_defined ; i++){
 		if (vars_names[i] == hash)
 			return ACCEPTED; 
 	}
@@ -66,8 +66,7 @@ int add_variable(char* key){
 
 void clear_vars(){
 
-	int i;
-	for(i = 0 ; i < tot_var_defined ; i++){
+	for(int i = 0 ; i < tot_var_defined ; i++){
 		vars_names[i] = 0;
 	}
 
@@ -91,8 +90,7 @@ int check_function_exist(char* function_name){
 		return DENNIED; //no existe la funcion!
 	}
 
-	int i;
-	for( i = 0 ; i < tot_functions_defined ; i++){
+	for( int i = 0 ; i < tot_functions_defined ; i++){
 		if (functions_names[i] == hash){
 			return ACCEPTED;
 		}
@@ -109,7 +107,6 @@ int add_function(char* function_name){
 	}
 
 	int hash = create_hash(function_name);
-	printf("el HASH de %s : %d\n",function_name,hash);
 	functions_names[tot_functions_defined] = hash;
 	tot_functions_defined++;
 	return ACCEPTED;
@@ -119,10 +116,11 @@ int add_function(char* function_name){
 int check_main_exist(){
 	int i = 0;
 	int hash_main = create_hash("main");
-	printf("en check_main_exist: %d\n",hash_main);
-	for( i = 0 ; i < tot_var_defined ; i++){
-		if( functions_names[i] == hash_main )
+
+	for( i = 0 ; i < tot_functions_defined ; i++){
+		if( functions_names[i] == hash_main ){
 			return ACCEPTED;
+		}
 	}
 	return DENNIED;
 }

@@ -1,13 +1,4 @@
-all:
-	cd compiler && \
-		make all
-
-	gcc -o osocompiler compiler/lex.yy.c compiler/y.tab.c -ly tree.c dmanager.c stack.c joutput.c -I./include -I./compiler/
-
-	cd compiler && \
-	make clean
-
-clean:
-
-	rm -f osocompiler
-	rm -f output.java
+	yacc -d osocompiler.y
+	lex osocompiler.l 
+	gcc -o osocompiler lex.yy.c y.tab.c -ly
+	./osocompiler < program.oso
