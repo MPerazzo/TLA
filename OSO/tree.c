@@ -2,17 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "tree.h"
-#include "definitions.c"
-#include "stack.c"
-
+#include "dmanager.h"
+#include "stack.h"
 
 void printTree(struct Node* node){
 
 	int tot = node->tot_nodes;
 	printf("%s\n",printNode(node));
 
-	for(int i = 0 ; i < tot ; i++){
+	int i;
+	for(i = 0 ; i < tot ; i++){
 		printTree(node->nodes[i]);
 	}
 	
@@ -168,7 +167,8 @@ struct Node* createIfNode(){
 	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
 	sprintf(to_conv, "if ( %s ){ \n", n->nodes[n->tot_nodes - 1]->cconv);
 	
-	for(int i = n->tot_nodes - 2 ; i >= 0; i--){
+	int i;
+	for(i = n->tot_nodes - 2 ; i >= 0; i--){
 		sprintf(to_conv, "%s %s", to_conv, n->nodes[i]->cconv); //OJO ACA!!! HAY QUE REVISARLO!!!
 	}
 
@@ -203,7 +203,8 @@ struct Node* createMainNode(char* ret, char* function_name){
 		addLeaveAtPosition(main_node, node_pop, t_nodes);
 	}
 
-	for(int i = 0 ; i < main_node->tot_nodes ; i++){
+	int i;
+	for(i = 0 ; i < main_node->tot_nodes ; i++){
 		sprintf(to_conv,"%s %s", to_conv, main_node->nodes[i]->cconv);
 	}
 
@@ -260,7 +261,8 @@ struct Node* createForNode(){
 	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
 	sprintf(to_conv,"for ( %s ) { \n", n->nodes[tot_elems - 1]->cconv);
 
-	for(int i = tot_elems - 2 ; i >= 0 ; i--){
+	int i;
+	for(i = tot_elems - 2 ; i >= 0 ; i--){
 		sprintf(to_conv,"%s %s",to_conv,n->nodes[i]->cconv);
 	}
 

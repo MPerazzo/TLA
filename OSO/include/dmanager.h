@@ -6,12 +6,6 @@
 #define ACCEPTED 0
 #define DENNIED 1
 
-unsigned int vars_names[MAX_VARIABLES] = {0};
-unsigned int functions_names[MAX_FUNCTIONS] = {0};
-
-int tot_functions_defined = 0;
-int tot_var_defined = 0;
-
 unsigned int create_hash(char *key);
 int check_var_exist(unsigned int hash_var_name);
 int add_variable(char* key);

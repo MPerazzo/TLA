@@ -44,7 +44,8 @@ void convert(struct Node* n){
 void printMain(struct Node* n){
 	printf("%s(",n->value);
 
-	for(int i = 0 ; i < n->tot_nodes ; i++){
+	int i;
+	for(i = 0 ; i < n->tot_nodes ; i++){
 		struct Node* s = n->nodes[i];
 		if(s->type != FUNPARAM){
 			printf("int reserved)\n");

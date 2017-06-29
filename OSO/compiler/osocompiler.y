@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "tree.c"
-#include "convert.c"
+#include "dmanager.h"
+#include "tree.h"
 
 extern int yylex();
 void yyerror(const char *s);
