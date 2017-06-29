@@ -35,7 +35,10 @@ struct Node* createIntegerNodeNoToStack(int value);
 struct Node* createWhileNode();
 struct Node* createFunParam(char* t, char* name);
 struct Node* createReadNode(char* var_to_read);
-struct Node* createShowNode(char* tipo, char* var_to_show);
+
+struct Node* createShowIntegerNode(int number);
+struct Node* createShowStringNode(char* var_or_text, int comillas);
+
 struct Node* createNewVariableStringNode(char* name, char* value);
 struct Node* createStringNode(char* v);
 struct Node* createStringNodeNoToStack(char* v);

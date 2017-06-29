@@ -329,17 +329,41 @@ struct Node* createReadNode(char* var_to_read){
 	return n;
 }
 
-struct Node* createShowNode(char* tipo, char* var_to_show){
+struct Node* createShowIntegerNode(int number){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	n->type = SHOWNODE;
 
 	char* v = malloc(sizeof(char) * MAX_LENGTH);
-	sprintf(v,"%s %s",tipo,var_to_show);
+	sprintf(v,"print -> %d",number);
 	n->value = v;
 	n->tot_nodes = 0;
 
 	char* to_conv = malloc(sizeof(char) * MAX_jconv);
+	sprintf(to_conv,"System.out.print(%d);", number);
+	n->jconv = to_conv;	
+
+	add(n);
+	return n;
+}
+
+struct Node* createShowStringNode(char* var_or_text, int comillas){
+	struct Node* n = malloc(sizeof(struct Node));
+
+	n->type = SHOWNODE;
+
+	char* v = malloc(sizeof(char) * MAX_LENGTH);
+	sprintf(v,"%s",var_or_text);
+	n->value = v;
+	n->tot_nodes = 0;
+
+	char* to_conv = malloc(sizeof(char) * MAX_jconv);
+
+	if(comillas == ACCEPTED)
+		sprintf(to_conv,"System.out.print(\"%s\");\n", var_or_text);
+	else
+		sprintf(to_conv,"System.out.print(%s);\n", var_or_text);
+
 	n->jconv = to_conv;	
 
 	add(n);

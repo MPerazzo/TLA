@@ -21,6 +21,7 @@ function	return FUNCTION;
 integer		return INTEGER_TYPE;
 string		return STRING_TYPE;
 show		return SHOW;
+line		return LINE;
 set 		return SET;
 
 start 		return START;

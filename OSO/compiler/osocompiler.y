@@ -20,7 +20,7 @@ void yyerror(const char *s);
 
 %token RUN FUNCTION EXIT
 %token INTEGER_TYPE STRING_TYPE 
-%token SHOW SET
+%token SHOW SET LINE
 %token IF FOR START END WHILE
 
 %token <number> INTEGER
@@ -70,7 +70,6 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 												}
 												add_function($3); //agrega la funcion al dmanager
 												add_function_stack(functionNode);
-												//output(functionNode->jconv);
 											}
 
 			| FUNCTION STRING_TYPE ID BODY	{
@@ -81,7 +80,6 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 												}
 												add_function($3);
 												add_function_stack(functionNode);
-												//output(functionNode->jconv);
 											}
 
 			;
@@ -117,23 +115,21 @@ STREAD:		':' ID ':' '.' 	{
 							}
 			;
 
-STPRINT:	SHOW '(' INTEGER_TYPE ')' ID '.' 	{	if(check($5) == ACCEPTED)
-														createShowNode("int",$5);
+STPRINT:	'&' ID '&''.'					 	{	if(check($2) == ACCEPTED)
+														createShowStringNode($2, DENNIED);
 													else{
-														printIDNotFound($5);
+														printIDNotFound($2);
 														return DENNIED;
 													}
 												}
-			| SHOW '(' STRING_TYPE ')' ID '.' 	{	if(check($5) == ACCEPTED)
-														createShowNode("string",$5);
-													else{
-														printIDNotFound($5);
-														return DENNIED;
-													}
+			| '&' INTEGER '&''.' 				{ 
+													createShowIntegerNode($2);
 												}
-			| SHOW INTEGER '.' 					{ /*TO DO*/
+			| '&' TEXT '&''.' 					{ 	
+													createShowStringNode($2, ACCEPTED);
 												}
-			| SHOW TEXT '.' 					{ 	createShowNode("string",$2);
+			| '&' LINE '&''.'					{
+													createShowStringNode("System.lineSeparator()", DENNIED); //OJO CON ESTOOOOOOOOOOOOOOOOOOOOOOO <--------
 												}
 			;
 
