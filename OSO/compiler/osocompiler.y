@@ -20,7 +20,6 @@ void yyerror(const char *s);
 %token INTEGER_TYPE STRING_TYPE 
 %token SHOW SET
 %token IF FOR START END WHILE
-%token LE GE EQ NE OR AND
 
 %token <number> INTEGER
 %token <string> ID
@@ -45,22 +44,30 @@ FUNS: 		FUN FUNS
 			;
 
 FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
-															struct Node* functionNode = createMainNode("int", $3);
-															printTree(functionNode);
-															printf("*************************\n");
-															printf("%s\n",functionNode->cconv);
+																printf("Not supported in this version\n");
+																return DENNIED;
 															}
 			| FUNCTION STRING_TYPE ID '[' PARAMS ']' BODY 	{
-
+																printf("Not supported in this version\n");
+																return DENNIED;
 															}
 			| FUNCTION INTEGER_TYPE ID BODY {
-												struct Node* functionNode = createMainNode("int", $3);
-												printTree(functionNode);
-												printf("*************************\n");
+												struct Node* functionNode = createMainNode("Integer", $3);
+												if(add_function($3) == DENNIED){
+													printf("Function %s already defined previously\n",$3);
+													return DENNIED;
+												}
 												printf("%s\n",functionNode->cconv);
 											}
 
-			| FUNCTION STRING_TYPE ID BODY
+			| FUNCTION STRING_TYPE ID BODY	{
+												struct Node* functionNode = createMainNode("String", $3);
+												if(add_function($3) == DENNIED){
+													printf("Function %s already defined previously\n",$3);
+													return DENNIED;
+												}
+												printf("%s\n",functionNode->cconv);
+											}
 
 			;
 
@@ -85,7 +92,12 @@ STFOR:		FOR COND_FOR BODY		{ createForNode();
 									}
 			;
 
-STREAD:		':' ID ':' '.' { createReadNode($2); }
+STREAD:		':' ID ':' '.' 	{ 
+								if(check($2) == ACCEPTED)
+									createReadNode($2);
+								else
+									printIDNotFound($2);
+							}
 			;
 
 STPRINT:	SHOW '(' INTEGER_TYPE ')' ID '.' { createShowNode("int",$5); }

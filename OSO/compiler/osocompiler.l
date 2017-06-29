@@ -42,12 +42,6 @@ end			return END;
 						return TEXT;
 						}
 
-"<="		return LE;
-">="		return GE;
-"=="		return EQ;
-"!="		return NE;
-"||"		return OR;
-"&&"		return AND;
 .			return yytext[0];
 
 %%

@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "tree.h"
-#include "variables.c"
+#include "definitions.c"
 #include "stack.c"
 
 
@@ -190,7 +191,11 @@ struct Node* createMainNode(char* ret, char* function_name){
 	int t_nodes = get_tot_stack(); 
 
 	char* to_conv = malloc(sizeof(char) * MAX_CCONV);
-	sprintf(to_conv, "%s %s() { \n", ret, function_name);	
+	if (strcmp(function_name,"main") == 0 ){
+		sprintf(to_conv, "public static void main(String[] args) { \n");	
+	} else {
+		sprintf(to_conv, "public static %s %s() { \n",ret,function_name);
+	}
 
 	while (get_tot_stack() != 0){
 		struct Node* node_pop = pop();
