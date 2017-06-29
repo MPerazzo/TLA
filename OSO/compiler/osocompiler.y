@@ -259,6 +259,7 @@ int main() {
 
     if (ret == ACCEPTED){
     	outputinit();
+    	output("import java.util.Scanner;\n");
 		output("public class output {\n");
     	to_ret_functions();
     	output("}\n");

@@ -383,7 +383,7 @@ struct Node* createSetIntegerNode(char* var_to_set, int val){
 	n->tot_nodes = 0;
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
-	sprintf(to_conv,"%s = %d\n",var_to_set,val);
+	sprintf(to_conv,"%s = %d;\n",var_to_set,val);
 	n->jconv = to_conv;	
 
 	add(n);
@@ -400,7 +400,7 @@ struct Node* createSetStringNode(char* var_to_set, char* val){
 	n->tot_nodes = 0;
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
-	sprintf(to_conv,"setString();\n");
+	sprintf(to_conv,"%s = \"%s\"\n;",var_to_set,val);
 	n->jconv = to_conv;	
 
 	add(n);

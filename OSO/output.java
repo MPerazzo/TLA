@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class output {
 
 public static void main(String[] args) { 
@@ -12,7 +14,7 @@ public static void main(String[] args) {
  System.out.print(System.lineSeparator());
  Integer aaa = 3; 
  a10 = 5
- } 
+; } 
  for ( int iterator = 5 ; iterator < 10 ; iterator++ ) { 
  System.out.print(iterator);
  Integer loso = 0; 
