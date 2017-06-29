@@ -1,9 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef TREE_H
+#define TREE_H
 
 #define MAX_NODES 30
 #define MAX_LENGTH 1000
-
 #define MAX_CCONV 10000
 
 typedef enum {CMP, IFNODE, INTEGERNODE, VINT, MAIN, FROMTO, 
@@ -44,3 +43,5 @@ struct Node* createSetStringNode(char* var_to_set, char* val);
 struct Node* createSetIntegerNode(char* var_to_set, int val);
 struct Node* createCMPAuxiliarNode(char* symbol);
 struct Node* createCMPAuxiliar2Node(char* symbol);
+
+#endif

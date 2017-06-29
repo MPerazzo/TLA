@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "tree.c"
+#include "dmanager.h"
+#include "tree.h"
+#include "joutput.h"
 
 extern int yylex();
 void yyerror(const char *s);
@@ -35,7 +37,8 @@ void yyerror(const char *s);
 
 %%
 
-INIT: 	RUN FUNS EXIT	 	{ 	if( check_main_exist() == ACCEPTED )
+INIT: 	RUN FUNS EXIT	 	{ 
+								if( check_main_exist() == ACCEPTED )
 									printf("OK\n");
 								else
 									printf("MAIN NOT CREATED\n");
@@ -61,7 +64,7 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 													return DENNIED;
 												}
 												add_function($3);
-												printf("%s\n",functionNode->cconv);
+												output(functionNode->cconv);
 											}
 
 			| FUNCTION STRING_TYPE ID BODY	{
@@ -70,9 +73,8 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 													printf("Function %s already defined previously\n",$3);
 													return DENNIED;
 												}
-												printf("LA FUNCION SE LLAMA: %s\n",$3);
 												add_function($3);
-												printf("%s\n",functionNode->cconv);
+												output(functionNode->cconv);
 											}
 
 			;
@@ -236,6 +238,8 @@ int yywrap()
 
 int main() {
     //printf("Enter the expression:\n");
+    outputinit();
     yyparse();
+    outputfinish(); 
 } 
 

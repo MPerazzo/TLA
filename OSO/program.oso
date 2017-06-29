@@ -1,5 +1,22 @@
 RUNOSO
 
+function integer main start
+	integer a1 = 50.
+
+	if [ 100 > 1 ] start
+		integer a2 = 10.
+		integer a4 = 5.
+		integer a10 = 100.
+		show -av-.
+	end
+
+	for[iterator = 5 : 10] start
+		:a:.
+	end
+
+	integer a52  = 5.
+end
+
 function integer a start
 	integer a1 = 50.
 
@@ -11,7 +28,6 @@ function integer a start
 	end
 
 	for[iterator = 5 : 10] start
-		integer a = 0.
 		:a:.
 	end
 

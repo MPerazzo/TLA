@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include "dmanager.h"
 
+unsigned int vars_names[MAX_VARIABLES] = {0};
+unsigned int functions_names[MAX_FUNCTIONS] = {0};
+
+int tot_functions_defined = 0;
+int tot_var_defined = 0;
+
 unsigned int create_hash(char *key){
     unsigned int hash, i;
 
@@ -28,7 +34,8 @@ int check_var_exist(unsigned int hash_var_name){
 		return ACCEPTED;
 	}
 
-	for(int i = 0 ; i < tot_var_defined; i++){
+	int i;
+	for(i = 0 ; i < tot_var_defined; i++){
 		if( vars_names[i] == hash_var_name ){
 			return DENNIED;
 		}
@@ -36,13 +43,11 @@ int check_var_exist(unsigned int hash_var_name){
 	return ACCEPTED;
 }
 
-/*
-Me dice si la variable fue creada previamente
-*/
 int check(char* id){
 	int hash = create_hash(id);
 	
-	for(int i = 0 ; i < tot_var_defined ; i++){
+	int i;
+	for(i = 0 ; i < tot_var_defined ; i++){
 		if (vars_names[i] == hash)
 			return ACCEPTED; 
 	}
@@ -66,7 +71,8 @@ int add_variable(char* key){
 
 void clear_vars(){
 
-	for(int i = 0 ; i < tot_var_defined ; i++){
+	int i;
+	for(i = 0 ; i < tot_var_defined ; i++){
 		vars_names[i] = 0;
 	}
 
@@ -90,7 +96,8 @@ int check_function_exist(char* function_name){
 		return DENNIED; //no existe la funcion!
 	}
 
-	for( int i = 0 ; i < tot_functions_defined ; i++){
+	int i;
+	for( i = 0 ; i < tot_functions_defined ; i++){
 		if (functions_names[i] == hash){
 			return ACCEPTED;
 		}
@@ -107,6 +114,7 @@ int add_function(char* function_name){
 	}
 
 	int hash = create_hash(function_name);
+	printf("el HASH de %s : %d\n",function_name,hash);
 	functions_names[tot_functions_defined] = hash;
 	tot_functions_defined++;
 	return ACCEPTED;
@@ -116,11 +124,10 @@ int add_function(char* function_name){
 int check_main_exist(){
 	int i = 0;
 	int hash_main = create_hash("main");
-
-	for( i = 0 ; i < tot_functions_defined ; i++){
-		if( functions_names[i] == hash_main ){
+	printf("en check_main_exist: %d\n",hash_main);
+	for( i = 0 ; i < tot_var_defined ; i++){
+		if( functions_names[i] == hash_main )
 			return ACCEPTED;
-		}
 	}
 	return DENNIED;
 }
