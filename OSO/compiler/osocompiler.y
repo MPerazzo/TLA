@@ -38,7 +38,10 @@ void yyerror(const char *s);
 %%
 
 INIT: 	RUN FUNS EXIT	 	{ 
-								printf("OK\n");
+								if( check_main_exist() == ACCEPTED )
+									printf("OK\n");
+								else
+									printf("MAIN NOT CREATED\n");
 							}
 		;
 
@@ -60,6 +63,7 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 													printf("Function %s already defined previously\n",$3);
 													return DENNIED;
 												}
+												add_function($3);
 												output(functionNode->cconv);
 											}
 
@@ -69,6 +73,7 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 													printf("Function %s already defined previously\n",$3);
 													return DENNIED;
 												}
+												add_function($3);
 												output(functionNode->cconv);
 											}
 
@@ -103,10 +108,20 @@ STREAD:		':' ID ':' '.' 	{
 							}
 			;
 
-STPRINT:	SHOW '(' INTEGER_TYPE ')' ID '.' { createShowNode("int",$5); }
-			| SHOW '(' STRING_TYPE ')' ID '.' { createShowNode("string",$5); }
-			| SHOW INTEGER '.' { /*TO DO*/ }
-			| SHOW TEXT '.' { createShowNode("string",$2); }
+STPRINT:	SHOW '(' INTEGER_TYPE ')' ID '.' 	{	if(check($5) == ACCEPTED)
+														createShowNode("int",$5);
+													else
+														printIDNotFound($5);
+												}
+			| SHOW '(' STRING_TYPE ')' ID '.' 	{	if(check($5) == ACCEPTED)
+														createShowNode("string",$5);
+													else
+														printIDNotFound($5);
+												}
+			| SHOW INTEGER '.' 					{ /*TO DO*/
+												}
+			| SHOW TEXT '.' 					{ 	createShowNode("string",$2);
+												}
 			;
 
 COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ createFromToNode($2,$4,$6);
@@ -116,16 +131,28 @@ COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ createFromToNode($2,$4,$6);
 BODY:		START STATEMENTS END
 			;
 
-DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{
-														createNewVariableStringNode($2,$4);
+DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{	if(check($2) == DENNIED)
+															createNewVariableStringNode($2,$4);
+														else
+															printIDAlreadyCreated($2);
 													}
-				| INTEGER_TYPE ID '=' INTEGER '.' 	{ 
-														createNewVariableIntegerNode($2,$4);
+				| INTEGER_TYPE ID '=' INTEGER '.' 	{ 	if(check($2) == DENNIED)
+															createNewVariableIntegerNode($2,$4);
+														else
+															printIDAlreadyCreated($2);
 													}
 				;
 
-CHANGE_VAR: 	SET ID INTEGER '.'	{ createSetIntegerNode($2,$3); }
-				| SET ID TEXT '.'	{ createSetStringNode($2,$3); }
+CHANGE_VAR: 	SET ID INTEGER '.'	{ 	if( check($2) == ACCEPTED )
+											createSetIntegerNode($2,$3);
+										else
+											printIDNotFound($2);
+									}
+				| SET ID TEXT '.'	{	if( check($2) == ACCEPTED )
+									 		createSetStringNode($2,$3);
+									 	else
+									 		printIDNotFound($2);
+									}
 				;
 
 STATEMENTS:	
