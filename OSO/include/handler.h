@@ -28,7 +28,12 @@ bool handle_var(char * id);
 void handle_int_cmp(char * logic_op, int val1, int val2);
 bool handle_int_var_cmp(char * logic_op, char * id, int value);
 bool handle_var_var_cmp(char * logic_op, char * id1, char * id2);
-bool handle_notSupported();
-bool handle_funRep(char * id);
+void handle_params_notSupported();
+void handle_fun_undefined(char* function_name);
+void handle_funRep(char * id);
+void handle_var_undefined(char* function_name);
+void handle_varRep(char* id);
+void handle_compile_success();
+void handle_main_missing();
 
 #endif

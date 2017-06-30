@@ -1,4 +1,7 @@
+%option yylineno
+
 %{
+	#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 	#include <stdio.h>
 	#include <string.h>
     #include "y.tab.h"
@@ -47,3 +50,8 @@ end			return END;
 .			return yytext[0];
 
 %%
+
+void yyerror(const char *str)
+{
+    fprintf(stderr,"Error at line %d : %s\n",yylineno, str);
+}

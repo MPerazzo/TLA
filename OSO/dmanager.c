@@ -61,7 +61,7 @@ bool add_variable(char* key){
 		tot_var_defined++;
 		return true;
 	}else{
-		printf("Already define %s variable name before\n",key);
+		printf("Variable '%s' already defined\n",key);
 		return false;
 	}
 
@@ -69,18 +69,6 @@ bool add_variable(char* key){
 
 void clear_vars(){
 	tot_var_defined = 0;
-}
-
-void printIDNotFound(char* id){
-	printf("Variable %s was not found\n",id);
-}
-
-void printFunctionNotFound(char* function_name){
-	printf("Function %s not created\n",function_name);
-}
-
-void printIDAlreadyCreated(char* id){
-	printf("Variable %s was initialized before\n",id);
 }
 
 bool check_function_exist(char* function_name){
@@ -104,7 +92,6 @@ bool add_function(char* function_name){
 	}
 
 	int hash = create_hash(function_name);
-	//printf("el HASH de %s : %d\n",function_name,hash);
 	functions_names[tot_functions_defined] = hash;
 	tot_functions_defined++;
 	return true;
@@ -126,9 +113,6 @@ void to_ret_functions(){
 	int c = get_tot_functions();
 
 	int i;
-	for(i = 0 ; i < c ; i++){
-		//printf("%s\n",pop_function_stack()->jconv);
+	for(i = 0 ; i < c ; i++)
 		output(pop_function_stack()->jconv);
-	}
-
 }

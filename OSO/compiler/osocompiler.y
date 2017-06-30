@@ -1,3 +1,6 @@
+%define parse.error verbose
+%locations
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,6 +10,8 @@
 
 extern int yylex();
 void yyerror(const char *s);
+
+int line;
 
 %}
 
@@ -46,11 +51,13 @@ FUNS: 		FUN FUNS
 			;
 
 FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
-																return handle_notSupported();
+																handle_params_notSupported();
+																return false;
 															}
 			
 			| FUNCTION STRING_TYPE ID '[' PARAMS ']' BODY 	{
-																return handle_notSupported();
+																handle_params_notSupported();
+																return false;
 															}
 			| FUNCTION INTEGER_TYPE ID BODY {
 												if (!handle_funDeclaration($3))
