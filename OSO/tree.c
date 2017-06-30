@@ -89,7 +89,7 @@ struct Node* createNewVariableStringNode(char* name, char* value){
 
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
-	sprintf(to_conv, "String %s = \"%s\";\n", name, value);
+	sprintf(to_conv, "String %s = %s;\n", name, value);
 	n->jconv = to_conv;
 
 	add(n);
@@ -261,6 +261,50 @@ struct Node* createFromToNode(char* name, int from, int to){
 
 }
 
+struct Node* createFromTo2Node(char* name, int from, char* to){
+
+	struct Node* n = malloc(sizeof(struct Node));
+
+	if ( add_variable(name) == DENNIED ){
+		return n;
+	}
+
+	n->type=FROMTO;
+
+	addLeaves(n,createIntegerNodeNoToStack(from));
+	addLeaves(n,createVariableCreated(to));
+
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv,"int %s = %d ; %s < %s ; %s++",name,from,name,to,name);
+	n->jconv = to_conv;
+
+	add(n);
+	return n;
+
+}
+
+struct Node* createFromTo3Node(char* name, char* from, char* to){
+
+	struct Node* n = malloc(sizeof(struct Node));
+
+	if ( add_variable(name) == DENNIED ){
+		return n;
+	}
+
+	n->type=FROMTO;
+
+	addLeaves(n,createVariableCreated(from));
+	addLeaves(n,createVariableCreated(to));
+
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv,"int %s = %s ; %s < %s ; %s++",name,from,name,to,name);
+	n->jconv = to_conv;
+
+	add(n);
+	return n;
+
+}
+
 struct Node* createForNode(){
 	struct Node* n = malloc(sizeof(struct Node));
 
@@ -372,7 +416,7 @@ struct Node* createShowIntegerNode(int number){
 	return n;
 }
 
-struct Node* createShowStringNode(char* var_or_text, int comillas){
+struct Node* createShowStringNode(char* var_or_text){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	n->type = SHOWNODE;
@@ -384,10 +428,7 @@ struct Node* createShowStringNode(char* var_or_text, int comillas){
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
 
-	if(comillas == ACCEPTED)
-		sprintf(to_conv,"System.out.print(\"%s\");\n", var_or_text);
-	else
-		sprintf(to_conv,"System.out.print(%s);\n", var_or_text);
+	sprintf(to_conv,"System.out.print(%s);\n", var_or_text);
 
 	n->jconv = to_conv;	
 
@@ -439,7 +480,7 @@ struct Node* createSetStringNode(char* var_to_set, char* val){
 	n->tot_nodes = 0;
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
-	sprintf(to_conv,"%s = \"%s\"\n;",var_to_set,val);
+	sprintf(to_conv,"%s = \"%s\";\n",var_to_set,val);
 	n->jconv = to_conv;	
 
 	add(n);
@@ -536,7 +577,21 @@ struct Node* createOPNode(char* symbol){
 
 	add(n);
 	return n;
+}
 
+struct Node* createCallVariableNode(char* symbol){
+	struct Node* n = malloc (sizeof(struct Node));
+
+	n->type = VINT;
+	n->value = symbol;
+	n->tot_nodes = 0;
+
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv,"%s",symbol);
+	n->jconv = to_conv;	
+
+	add(n);
+	return n;
 }
 
 void addLeaveAtPosition(struct Node* root, struct Node* leave, int pos){

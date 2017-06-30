@@ -38,7 +38,7 @@ end			return END;
 						return ID;
 						}
 
--[a-zA-Z0-9?! ]*- 		{
+["][a-zA-Z0-9?! ]*["]	{
 						yylval.string = strdup(yytext);
 						return TEXT;
 						}

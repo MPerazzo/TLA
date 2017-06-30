@@ -3,11 +3,13 @@ import java.util.Scanner;
 public class output {
 
 public static void main(String[] args) { 
- Integer a1 = 50; 
- Integer hola = (10 + 50); 
- String a = "-como anda-";
- System.out.print(a1);
- hola = 53 + 1;
+ Integer v1 = 0; 
+ System.out.print("Ingrese un numero valido");
+ Scanner _v_v1_s_ = new Scanner(System.in); String _v_v1_s_aux_ = _v_v1_s_.next(); try { v1 = Integer.parseInt(_v_v1_s_aux_); } catch (Exception e) { System.out.println("Compilation Ended"); }
+ for ( int iterator = 1 ; iterator < v1 ; iterator++ ) { 
+ System.out.print(iterator);
+ System.out.print(System.lineSeparator());
+ }
  }
 
 }

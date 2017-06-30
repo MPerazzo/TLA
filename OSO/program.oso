@@ -1,13 +1,15 @@
 RUNOSO
 
 function integer main start
-	integer a1 = 50.
-	integer hola = (10 + 50).
-	string a = -como anda-.
-	&a1&.
-	set hola 53 + 1 .
-	
-end
+	integer v1 = 0.
+	&"Ingrese un numero valido"&.
+	:v1:.
 
+	for [iterator = 1 : v1] start
+		&iterator&.
+		&line&.
+	end
+
+end
 
 EXITOSO

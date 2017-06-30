@@ -125,7 +125,7 @@ STFUNCTION:	CALL ID '.'	{
 						}	
 
 STPRINT:	'&' ID '&''.'					 	{	if(check($2) == ACCEPTED)
-														createShowStringNode($2, DENNIED);
+														createShowStringNode($2);
 													else{
 														printIDNotFound($2);
 														return DENNIED;
@@ -134,23 +134,39 @@ STPRINT:	'&' ID '&''.'					 	{	if(check($2) == ACCEPTED)
 			| '&' INTEGER '&''.' 				{ 
 													createShowIntegerNode($2);
 												}
-			| '&' TEXT '&''.' 					{ 	
-													createShowStringNode($2, ACCEPTED);
+			| '&' TEXT  '&''.'					{ 	
+													createShowStringNode($2);
 												}
 			| '&' LINE '&''.'					{
-													createShowStringNode("System.lineSeparator()", DENNIED); //OJO CON ESTOOOOOOOOOOOOOOOOOOOOOOO <--------
+													createShowStringNode("System.lineSeparator()"); //OJO CON ESTOOOOOOOOOOOOOOOOOOOOOOO <--------
 												}
 			;
 
 COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ createFromToNode($2,$4,$6);
+												}
+			| '[' ID '=' INTEGER ':' ID ']' 	{ 	if(check($6) == DENNIED){
+														printIDNotFound($6);
+														return DENNIED;
+													}
+													createFromTo2Node($2,$4,$6);
+												}
+			| '[' ID '=' ID ':' ID ']' 			{ 	if(check($6) == DENNIED){
+														printIDNotFound($6);
+														return DENNIED;
+													}
+													if(check($4) == DENNIED){
+														printIDNotFound($4);
+														return DENNIED;
+													}
+													createFromTo3Node($2,$4,$6);
 												}
 			;
 
 BODY:		START STATEMENTS END
 			;
 
-DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{	if(check($2) == DENNIED)
-															createNewVariableStringNode($2,$4);
+DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'				{	if(check($2) == DENNIED)
+															createNewVariableStringNode($2,$4); //<---------------
 														else{
 															printIDAlreadyCreated($2);
 															return DENNIED;
@@ -167,7 +183,6 @@ DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{	if(check($2) == DENNIED)
 
 CHANGE_VAR: 	SET ID INT_OPS '.'	{ 	if( check($2) == ACCEPTED ){
 											createSetInteger2Node($2);
-											printf("SET");
 										} else {
 											printIDNotFound($2);
 											return DENNIED;
@@ -202,28 +217,34 @@ STATEMENTS:		DECLARE_VAR
 
 INT_OPS:		INT_OPS '+' INT_OPS			{
 												createOPNode("+");
-												printf("+\n");
 											}
 				| INT_OPS '-' INT_OPS		{
 												createOPNode("-");
-												printf("-\n");
 											}
 				| INT_OPS '*' INT_OPS		{
 												createOPNode("*");
-												printf("*\n");
 											}
 				| INT_OPS '/' INT_OPS		{
 												createOPNode("/");
-												printf("/\n");
+											}
+				| INT_OPS '%' INT_OPS		{
+												createOPNode("%");
 											}
 				| '(' INT_OPS ')'			{
 												createParenthesisNode();
-												printf("()\n");
 											}
 				| INTEGER 					{
 												createIntegerNode($1);
-												printf("%d\n",$1);
 											}
+				| ID 						{
+												if( check($1) == ACCEPTED )
+											 		createCallVariableNode($1);
+											 	else{
+											 		printIDNotFound($1);
+											 		return DENNIED;
+											 	}
+											}
+				;
        
 BOOL_CONDITION: 
 				INTEGER '>' INTEGER 			{
@@ -275,6 +296,7 @@ BOOL_CONDITION:
 													createCMPNode("==",createIntegerNodeNoToStack($1), createVariableCreated($4));
 												}
 				;		
+
 
 BOOLEANS:	'!' '(' BOOL_CONDITION ')' 							{ createCMPAuxiliarNode("!"); } //quiza aca, en yacc en vez de trabajar con BOOL_CONDITION me convenga trabajar con BOOLEANS
 			| '(' BOOL_CONDITION '&''&' BOOL_CONDITION ')'		{ createCMPAuxiliar2Node("&&"); }
