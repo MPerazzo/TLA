@@ -141,7 +141,8 @@ int check_main_exist(){
 void to_ret_functions(){
 	int c = get_tot_functions();
 
-	for(int i = 0 ; i < c ; i++){
+	int i;
+	for(i = 0 ; i < c ; i++){
 		//printf("%s\n",pop_function_stack()->jconv);
 		output(pop_function_stack()->jconv);
 	}

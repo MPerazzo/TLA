@@ -1,5 +1,5 @@
 ./osocompiler < $1
-mkdir output
+mkdir -p output
 mv output.java output
 cd output
 javac -g output.java
