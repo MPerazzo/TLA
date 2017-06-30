@@ -1,12 +1,12 @@
 # TLA
 
-Teoria de Lenguajes y Automatas ITBA 2017
+##Teoria de Lenguajes y Automatas ITBA 2017
 
 Linux
 
-Compilar compilador
+###Compilar compilador
 make
 
-Compilar tests
+###Compilar tests
 *Considerar que los tests se encuentran en la carpeta testcase.
 ./run.sh testcase.oso
