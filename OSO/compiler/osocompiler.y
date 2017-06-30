@@ -226,25 +226,29 @@ STATEMENTS:		DECLARE_VAR
 				| STCONST STATEMENTS
 				;
 
-INT_OPS:		INT_OPS '+' INT_OPS			{
+INT_OPS:		TYPOS '+' INT_OPS			{
 												createOPNode("+");
 											}
-				| INT_OPS '-' INT_OPS		{
+				| TYPOS '-' INT_OPS		{
 												createOPNode("-");
 											}
-				| INT_OPS '*' INT_OPS		{
+				| TYPOS '*' INT_OPS		{
 												createOPNode("*");
 											}
-				| INT_OPS '/' INT_OPS		{
+				| TYPOS '/' INT_OPS		{
 												createOPNode("/");
 											}
-				| INT_OPS '%' INT_OPS		{
+				| TYPOS '%' INT_OPS		{
 												createOPNode("%");
 											}
 				| '(' INT_OPS ')'			{
 												createParenthesisNode();
 											}
-				| INTEGER 					{
+				| TYPOS
+				
+				;
+				
+TYPOS:			INTEGER 					{
 												createIntegerNode($1);
 											}
 				| ID 						{
