@@ -10,4 +10,4 @@ all:
 clean:
 
 	rm -f osocompiler
-	rm -f output.java
+	rm -R output 
