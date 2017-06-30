@@ -1,8 +1,10 @@
 RUNOSO
 
 function integer test start
+	const a 10.
 	&"Llamo a la funcion externa"&.
 	&line&.
+	&a&.
 end
 
 function integer main start

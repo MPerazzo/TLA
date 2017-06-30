@@ -18,7 +18,7 @@ void yyerror(const char *s);
         char *string;
 }
 
-%token RUN FUNCTION EXIT
+%token RUN FUNCTION EXIT CONST
 %token INTEGER_TYPE STRING_TYPE 
 %token SET LINE CALL
 %token IF FOR START END WHILE
@@ -115,6 +115,15 @@ STREAD:		':' ID ':' '.' 	{
 							}
 			;
 
+STCONST: 	CONST ID INTEGER '.'	{
+										if( check($2) == DENNIED ){
+											createNewVariableIntegerNode($2, $3);
+										} else {
+											printIDNotFound($2);
+											return DENNIED;
+										}
+									}
+
 STFUNCTION:	CALL ID '.'	{
 							if( check_function_exist($2)== ACCEPTED )
 								createCallFunctionNode($2);
@@ -205,6 +214,7 @@ STATEMENTS:		DECLARE_VAR
 				| STPRINT
 				| CHANGE_VAR
 				| STFUNCTION
+				| STCONST
 				| DECLARE_VAR STATEMENTS
 				| STIF STATEMENTS
 				| STFOR STATEMENTS
@@ -213,6 +223,7 @@ STATEMENTS:		DECLARE_VAR
 				| STPRINT STATEMENTS
 				| CHANGE_VAR STATEMENTS
 				| STFUNCTION STATEMENTS
+				| STCONST STATEMENTS
 				;
 
 INT_OPS:		INT_OPS '+' INT_OPS			{
