@@ -30,34 +30,23 @@ unsigned int create_hash(char *key){
     return hash;
 }
 
-bool check_var_exist(unsigned int hash_var_name){
+bool var_exist(char * id){
+
+	unsigned int hash_var_name = create_hash(id);
 
 	int i;
 	for(i = 0 ; i < tot_var_defined; i++){
 		if( vars_names[i] == hash_var_name ){
-			return false;
+			return true;
 		}
 	}
-	return true;
-}
-
-bool check(char* id){
-	int hash = create_hash(id);
-	
-	int i;
-	for(i = 0 ; i < tot_var_defined ; i++){
-		if (vars_names[i] == hash)
-			return true; 
-	}
-
 	return false;
 }
 
 bool add_variable(char* key){
-	unsigned int hash = create_hash(key);
 
-	if(check_var_exist(hash)){
-		vars_names[tot_var_defined] = hash;
+	if(!var_exist(key)){
+		vars_names[tot_var_defined] = create_hash(key);
 		tot_var_defined++;
 		return true;
 	}else{

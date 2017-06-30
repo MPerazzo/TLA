@@ -25,7 +25,7 @@ bool handle_funDeclaration(char * id) {
 }
 
 bool handle_string_varDeclaration(char * id, char * string) {
-	if (!check(id)) {
+	if (!var_exist(id)) {
 		createNewVariableStringNode(id, string);
 		return true;
 	}
@@ -34,7 +34,7 @@ bool handle_string_varDeclaration(char * id, char * string) {
 }
 
 bool handle_int_varDeclaration(char * id) {
-	if (!check(id)) {
+	if (!var_exist(id)) {
 		createNewVariableInteger2Node(id);
 		return true;
 	}
@@ -43,7 +43,7 @@ bool handle_int_varDeclaration(char * id) {
 }
 
 bool handle_int_set(char * id) {
-	if (check(id)){
+	if (var_exist(id)){
 		createSetInteger2Node(id);
 		return true;
 	} 
@@ -52,7 +52,7 @@ bool handle_int_set(char * id) {
 }
 
 bool handle_string_set(char * id, char * string) {
-	if (check(id)){
+	if (var_exist(id)){
 		createSetStringNode(id, string);
 		return true;
 	} 
@@ -70,7 +70,7 @@ bool handle_funCall(char * id) {
 }
 
 bool handle_stdRead(char * id) {
-	if (check(id)) {
+	if (var_exist(id)) {
 		createReadNode(id);
 		return true;
 	}
@@ -79,7 +79,7 @@ bool handle_stdRead(char * id) {
 }
 
 bool handle_var_stdWrite(char * id) {
-	if (check(id)) {
+	if (var_exist(id)) {
 		createShowStringNode(id);
 		return true;
 	}
@@ -96,7 +96,7 @@ void handle_string_stdWrite(char * string) {
 }
 
 bool handle_constInteger(char * id, int value) {
-	if (!check(id)){
+	if (!var_exist(id)){
 		createNewVariableIntegerNode(id, value);
 		return true;
 	} 
@@ -129,7 +129,7 @@ void handle_for() {
  }
 
  bool handle_condFor_varLimit(char * id, int value, char * var_limit) {
- 	if (!check(var_limit)){
+ 	if (!var_exist(var_limit)){
 		handle_var_undefined(var_limit);
 		return false;
 	}
@@ -138,11 +138,11 @@ void handle_for() {
  } 
 
 bool handle_condFor_allVar(char * id, char * var_value, char * var_limit) {
-	if (!check(var_limit)){
+	if (!var_exist(var_limit)){
 		handle_var_undefined(var_limit);
 		return false;
 	}
-	if (!check(var_value)){
+	if (!var_exist(var_value)){
 		handle_var_undefined(var_value);
 		return false;
 	}
@@ -154,7 +154,7 @@ void handle_int(int value) {
 }
 
 bool handle_var(char * id) {
-	if (check(id)) {
+	if (var_exist(id)) {
 		createCallVariableNode(id);
 		return true;
 	}
@@ -167,7 +167,7 @@ void handle_int_cmp(char * logic_op, int val1, int val2) {
 }
 
 bool handle_int_var_cmp(char * logic_op, char * id, int value) {
-	if (!check(id)) {
+	if (!var_exist(id)) {
 		handle_var_undefined(id); 
 		return false;
 	}
@@ -176,11 +176,11 @@ bool handle_int_var_cmp(char * logic_op, char * id, int value) {
 }
 
 bool handle_var_var_cmp(char * logic_op, char * id1, char * id2) {
-	if (!check(id1)) {
+	if (!var_exist(id1)) {
 		handle_var_undefined(id1); 
 		return false;
 	}
-	if (!check(id2)) {
+	if (!var_exist(id2)) {
 		handle_var_undefined(id2); 
 		return false;
 	}

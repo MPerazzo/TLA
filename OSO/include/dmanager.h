@@ -6,11 +6,10 @@
 
 typedef enum{false, true} bool;
 
-unsigned int create_hash(char *key);
-bool check_var_exist(unsigned int hash_var_name);
+unsigned int create_hash(char * key);
+bool var_exist(char * key);
 bool add_variable(char* key);
 void clear_vars();
-bool check(char* id);
 void printIDNotFound(char* id);
 bool check_function_exist(char* function_name);
 bool add_function(char* function_name);

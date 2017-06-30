@@ -31,7 +31,7 @@ struct Node* createNewVariableIntegerNode(char* name, int value){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	if (!add_variable(name)){
-		return n;
+		return NULL;
 	}
 
 	char* v;
@@ -55,7 +55,7 @@ struct Node* createNewVariableInteger2Node(char* name){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	if (!add_variable(name)){
-		return n;
+		return NULL;
 	}
 
 	n->type = VINT;
@@ -77,7 +77,7 @@ struct Node* createNewVariableStringNode(char* name, char* value){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	if (!add_variable(name)){
-		return n;
+		return NULL;
 	}
 
 	char* v;
@@ -245,7 +245,7 @@ struct Node* createFromToNode(char* name, int from, int to){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	if (!add_variable(name)){
-		return n;
+		return NULL;
 	}
 
 	n->type=FROMTO;
@@ -267,7 +267,7 @@ struct Node* createFromTo2Node(char* name, int from, char* to){
 	struct Node* n = malloc(sizeof(struct Node));
 
 	if (!add_variable(name)){
-		return n;
+		return NULL;
 	}
 
 	n->type=FROMTO;
