@@ -9,7 +9,13 @@ public static void main(String[] args) {
  for ( int iterator = 1 ; iterator < v1 ; iterator++ ) { 
  System.out.print(iterator);
  System.out.print(System.lineSeparator());
+ test();
  }
+ }
+
+public static void test() { 
+ System.out.print("Llamo a la funcion externa");
+ System.out.print(System.lineSeparator());
  }
 
 }

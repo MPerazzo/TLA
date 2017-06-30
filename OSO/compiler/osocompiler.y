@@ -63,7 +63,7 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 																return DENNIED;
 															}
 			| FUNCTION INTEGER_TYPE ID BODY {
-												struct Node* functionNode = createMainNode("Integer", $3);
+												struct Node* functionNode = createMainNode("void", $3);
 												if(add_function($3) == DENNIED){
 													printf("Function %s already defined previously\n",$3);
 													return DENNIED;
@@ -73,7 +73,7 @@ FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 											}
 
 			| FUNCTION STRING_TYPE ID BODY	{
-												struct Node* functionNode = createMainNode("String", $3);
+												struct Node* functionNode = createMainNode("void", $3);
 												if(add_function($3) == DENNIED){
 													printf("Function %s already defined previously\n",$3);
 													return DENNIED;
