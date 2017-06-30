@@ -326,14 +326,19 @@ int yywrap()
 
 int main() {
 
-    if (yyparse()){
-    	outputinit();
-    	output("import java.util.Scanner;\n");
-		output("public class output {\n");
+   	outputinit();
+   	output("import java.util.Scanner;\n");
+	output("public class output {\n");
+
+	int valor = yyparse();
+
+    if (valor != false){
     	to_ret_functions();
-    	output("}\n");
-    	outputfinish(); 
+    } else {
+    	output("public static void main(String[] args) {}");
     }
 
-} 
+    output("}\n");
+    outputfinish();  
 
+} 
