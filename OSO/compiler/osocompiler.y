@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "dmanager.h"
 #include "tree.h"
 #include "joutput.h"
-#include "stack.h"
+#include "handler.h"
 
 extern int yylex();
 void yyerror(const char *s);
@@ -39,14 +38,7 @@ void yyerror(const char *s);
 %%
 
 INIT: 	RUN FUNS EXIT	 	{ 	
-								if(check_main_exist()){
-									printf("Compiled OSO\n");
-									return true;
-
-								} else{
-									printf("Function MAIN missing!\n");
-									return false;
-								}
+								return handle_main();
 							}
 		;
 
@@ -55,152 +47,121 @@ FUNS: 		FUN FUNS
 			;
 
 FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
-																printf("Not supported in this version\n");
-																return false;
+																return handle_notSupported();
 															}
+			
 			| FUNCTION STRING_TYPE ID '[' PARAMS ']' BODY 	{
-																printf("Not supported in this version\n");
-																return true;
+																return handle_notSupported();
 															}
 			| FUNCTION INTEGER_TYPE ID BODY {
-												struct Node* functionNode = createMainNode("void", $3);
-												if(!add_function($3)){
-													printf("Function %s already defined previously\n",$3);
+												if (!handle_funDeclaration($3))
 													return false;
-												}
-												add_function_stack(functionNode);
+
 											}
 
 			| FUNCTION STRING_TYPE ID BODY	{
-												struct Node* functionNode = createMainNode("void", $3);
-												if(!add_function($3)){
-													printf("Function %s already defined previously\n",$3);
+												if (!handle_funDeclaration($3))
 													return false;
-												}
-												add_function_stack(functionNode);
 											}
 
 			;
 
-PARAMS: 	INTEGER_TYPE ID PARAMS 	{ createFunParam("int", $2);
-									}
-			| STRING_TYPE ID PARAMS { createFunParam("string", $2);
-									}
-			| INTEGER_TYPE ID 		{ createFunParam("int", $2);	
-									}
-			| STRING_TYPE ID 		{ createFunParam("string", $2);
-									}
+PARAMS: 	INTEGER_TYPE ID PARAMS 	
+									
+			| STRING_TYPE ID PARAMS 
+								
+			| INTEGER_TYPE ID 		
+									
+			| STRING_TYPE ID 		
+									
 			;
 
-STIF:		IF '[' BOOLEANS ']' BODY	{ createIfNode();
+STIF:		IF '[' BOOLEANS ']' BODY	{ 
+											handle_if();
  										}
 			;
 
-STWHILE:	WHILE '[' BOOLEANS ']' BODY 	{ createWhileNode();
+STWHILE:	WHILE '[' BOOLEANS ']' BODY 	{ 
+												handle_while();
 			;								}
 
-STFOR:		FOR COND_FOR BODY		{ createForNode();
+STFOR:		FOR COND_FOR BODY		{ 
+										handle_for();
 									}
 			;
 
 STREAD:		':' ID ':' '.' 	{ 
-								if(check($2))
-									createReadNode($2);
-								else{
-									printIDNotFound($2);
+								if (!handle_stdRead($2))
 									return false;
-								}
 							}
 			;
 
 STCONST: 	CONST ID INTEGER '.'	{
- 										if(!check($2)){
- 											createNewVariableIntegerNode($2, $3);
- 										} else {
- 											printIDNotFound($2);
+ 										if (!handle_constInteger($2, $3))
  											return false;
- 										}
  									}
  
 STFUNCTION:	CALL ID '.'	{
-							if(check_function_exist($2))
-								createCallFunctionNode($2);
-							else {
-								printFunctionNotFound($2);
+							if (!handle_funCall($2))
 								return false;
-							}
 						}	
 
-STPRINT:	'&' ID '&''.'					 	{	if(check($2))
-														createShowStringNode($2);
-													else{
-														printIDNotFound($2);
+STPRINT:	'&' ID '&''.'					 	{	
+													if (!handle_var_stdWrite($2))
 														return false;
-													}
 												}
+			
 			| '&' INTEGER '&''.' 				{ 
-													createShowIntegerNode($2);
+													handle_int_stdWrite($2);
 												}
+			
 			| '&' TEXT  '&''.'					{ 	
-													createShowStringNode($2);
+													handle_string_stdWrite($2);													
 												}
+			
 			| '&' LINE '&''.'					{
-													createShowStringNode("System.lineSeparator()");
+													handle_string_stdWrite("System.lineSeparator()");
 												}
 			;
 
-COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ createFromToNode($2,$4,$6);
+COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ 
+													handle_condFor($2,$4,$6);
 												}
-			| '[' ID '=' INTEGER ':' ID ']' 	{ 	if(!check($6)){
-														printIDNotFound($6);
+			
+			| '[' ID '=' INTEGER ':' ID ']' 	{ 	
+													if (!handle_condFor_varLimit($2,$4,$6))
 														return false;
-													}
-													createFromTo2Node($2,$4,$6);
+
 												}
-			| '[' ID '=' ID ':' ID ']' 			{ 	if(!check($6)){
-														printIDNotFound($6);
+			
+			| '[' ID '=' ID ':' ID ']' 			{ 	
+													if (!handle_condFor_allVar($2, $4, $6))
 														return false;
-													}
-													if(!check($4)){
-														printIDNotFound($4);
-														return false;
-													}
-													createFromTo3Node($2,$4,$6);
 												}
 			;
 
 BODY:		START STATEMENTS END
 			;
 
-DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'				{	if(!check($2))
-															createNewVariableStringNode($2,$4);
-														else{
-															printIDAlreadyCreated($2);
+DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{
+														if (!handle_string_varDeclaration($2, $4))	
 															return false;
-														}
 													}
-				| INTEGER_TYPE ID '=' INT_OPS '.' 	{ 	if(!check($2))
-															createNewVariableInteger2Node($2);
-														else{
-															printIDAlreadyCreated($2);
+													
+				| INTEGER_TYPE ID '=' INT_OPS '.' 	{ 		
+														if (!handle_int_varDeclaration($2))
 															return false;
-														}
 													}
 				;
 
-CHANGE_VAR: 	SET ID INT_OPS '.'	{ 	if(check($2)){
-											createSetInteger2Node($2);
-										} else {
-											printIDNotFound($2);
+CHANGE_VAR: 	SET ID INT_OPS '.'	{ 	
+										if (!handle_int_set($2))
 											return false;
-										}
 									}
-				| SET ID TEXT '.'	{	if(check($2))
-									 		createSetStringNode($2,$3);
-									 	else{
-									 		printIDNotFound($2);
-									 		return false;
-									 	}
+				
+				| SET ID TEXT '.'	{	
+										if (!handle_string_set($2, $3))
+											return false;
 									}
 				;
 
@@ -225,22 +186,27 @@ STATEMENTS:		DECLARE_VAR
 				;
 
 INT_OPS:		TYPOS '+' INT_OPS			{
-												createOPNode("+");
+												handle_int_op("+");
 											}
-				| TYPOS '-' INT_OPS		{
-												createOPNode("-");
+				
+				| TYPOS '-' INT_OPS			{
+												handle_int_op("-");
 											}
-				| TYPOS '*' INT_OPS		{
-												createOPNode("*");
+				
+				| TYPOS '*' INT_OPS			{
+												handle_int_op("*");
 											}
-				| TYPOS '/' INT_OPS		{
-												createOPNode("/");
+				
+				| TYPOS '/' INT_OPS			{
+												handle_int_op("/");
 											}
-				| TYPOS '%' INT_OPS		{
-												createOPNode("%");
+				
+				| TYPOS '%' INT_OPS			{
+												handle_int_op("%");
 											}
+				
 				| '(' INT_OPS ')'			{
-												createParenthesisNode();
+												handle_parenthesis();
 											}
 
 				| TYPOS
@@ -248,103 +214,70 @@ INT_OPS:		TYPOS '+' INT_OPS			{
 				;
 				
 TYPOS:			INTEGER 					{
-												createIntegerNode($1);
+												handle_int($1);
 											}				
 
 				| ID 						{
-												if(check($1))
-											 		createCallVariableNode($1);
-											 	else{
-											 		printIDNotFound($1);
-											 		return false;
-											 	}
+												handle_var($1);
 											}
 				;
        
 BOOL_CONDITION: 
 				INTEGER '>' INTEGER 			{
-													createCMPNode(">",createIntegerNodeNoToStack($1),createIntegerNodeNoToStack($3));
+													handle_int_cmp(">", $1, $3);
 												}
+				
 				| INTEGER '<' INTEGER  			{
-													createCMPNode("<",createIntegerNodeNoToStack($1),createIntegerNodeNoToStack($3));
+													handle_int_cmp(">", $1, $3);
 												}
+				
 				| INTEGER '=''=' INTEGER 		{
-													createCMPNode("==",createIntegerNodeNoToStack($1),createIntegerNodeNoToStack($4));
+													handle_int_cmp(">", $1, $4);
 												}
+				
 				| ID '>' INTEGER 				{	
-													if (!check($1)) {
-														printIDNotFound($1); 
+													if (!handle_int_var_cmp(">", $1, $3))
 														return false;
-													}
-													createCMPNode(">",createVariableCreated($1), createIntegerNodeNoToStack($3));
 												}
+				
 				| ID '<' INTEGER 				{
-													if (!check($1)) {
-														printIDNotFound($1); 
+													if (!handle_int_var_cmp("<", $1, $3))
 														return false;
-													}
-													createCMPNode("<",createVariableCreated($1), createIntegerNodeNoToStack($3));
 												} 
+				
 				| ID '=''=' INTEGER 			{
-													if (!check($1)) {
-														printIDNotFound($1); 
+													if (!handle_int_var_cmp("==", $1, $4))
 														return false;
-													}
-													createCMPNode("==",createVariableCreated($1), createIntegerNodeNoToStack($4));
 												}
+				
 				| ID '>' ID 					{ 
-													if (!check($1)) {
-														printIDNotFound($1); 
+													if (!handle_var_var_cmp(">", $1, $3))
 														return false;
-													}
-													if (!check($3)) {
-														printIDNotFound($3); 
-														return false;
-													}
-													createCMPNode(">",createVariableCreated($1), createVariableCreated($3));
 												} 
+				
 				| ID '<' ID 					{
-													if (!check($1)) {
-														printIDNotFound($1); 
+													if (!handle_var_var_cmp("<", $1, $3))
 														return false;
-													}
-													if (!check($3)) {
-														printIDNotFound($3); 
-														return false;
-													}
-													createCMPNode("<",createVariableCreated($1), createVariableCreated($3));
 												} 
+				
 				| ID '=''=' ID 					{
-													if (!check($1)) {
-														printIDNotFound($1); 
+													if (!handle_var_var_cmp("==", $1, $4))
 														return false;
-													}
-													if (!check($4)) {
-														printIDNotFound($4); 
-														return false;
-													}
-													createCMPNode("==",createVariableCreated($1), createVariableCreated($4));
 												}
+				
 				| INTEGER '>' ID 				{
-													if (!check($3)) {
-														printIDNotFound($3); 
+													if (!handle_int_var_cmp(">", $3, $1))
 														return false;
-													}
-													createCMPNode(">",createIntegerNodeNoToStack($1), createVariableCreated($3));
 												}  
+				
 				| INTEGER '<' ID 				{
-													if (!check($3)) {
-														printIDNotFound($3); 
+													if (!handle_int_var_cmp("<", $3, $1))
 														return false;
-													}
-													createCMPNode("<",createIntegerNodeNoToStack($1), createVariableCreated($3));
 												} 
+				
 				| INTEGER '=''=' ID 			{
-													if (!check($4)) {
-														printIDNotFound($4); 
+													if (!handle_int_var_cmp(">", $4, $1))
 														return false;
-													}
-													createCMPNode("==",createIntegerNodeNoToStack($1), createVariableCreated($4));
 												}
 				;		
 
