@@ -9,6 +9,14 @@ function integer main start
 	integer num = 0.
 	:num:.
 
+	if [ num < 10 ] start
+		&"Es menor que diez"&.
+	end
+
+	if [ ( 10 < 5 || num == 8 ) ] start
+		&"Funciona"&.
+	end
+
 	while [ num < counter ] start
 		&counter&.
 		&" "&.

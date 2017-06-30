@@ -248,11 +248,11 @@ BOOL_CONDITION:
 												}
 				
 				| INTEGER '<' INTEGER  			{
-													handle_int_cmp(">", $1, $3);
+													handle_int_cmp("<", $1, $3);
 												}
 				
 				| INTEGER '=''=' INTEGER 		{
-													handle_int_cmp(">", $1, $4);
+													handle_int_cmp("==", $1, $4);
 												}
 				
 				| ID '>' INTEGER 				{	
@@ -305,7 +305,7 @@ BOOL_CONDITION:
 				
 				| INTEGER '=''=' ID 			{
 													line = @1.first_line;				
-													if (!handle_int_var_cmp(">", $4, $1))
+													if (!handle_int_var_cmp("==", $4, $1))
 														return false;
 												}
 				;		

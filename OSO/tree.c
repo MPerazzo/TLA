@@ -532,7 +532,7 @@ struct Node* createCMPAuxiliar2Node(char* symbol){
 	addLeaves(n,node_pop2);
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
-	sprintf(to_conv,"%s %s %s\n",node_pop1->jconv,symbol,node_pop2->jconv);
+	sprintf(to_conv,"%s %s %s\n",node_pop2->jconv,symbol,node_pop1->jconv);
 	n->jconv = to_conv;	
 
 	add(n);
