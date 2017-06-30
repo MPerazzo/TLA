@@ -113,7 +113,6 @@ STREAD:		':' ID ':' '.' 	{
 							}
 			;
 
-
 STCONST: 	CONST ID INTEGER '.'	{
  										if(!check($2)){
  											createNewVariableIntegerNode($2, $3);
@@ -146,7 +145,7 @@ STPRINT:	'&' ID '&''.'					 	{	if(check($2))
 													createShowStringNode($2);
 												}
 			| '&' LINE '&''.'					{
-													createShowStringNode("System.lineSeparator()"); //OJO CON ESTOOOOOOOOOOOOOOOOOOOOOOO <--------
+													createShowStringNode("System.lineSeparator()");
 												}
 			;
 
@@ -174,7 +173,7 @@ BODY:		START STATEMENTS END
 			;
 
 DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'				{	if(!check($2))
-															createNewVariableStringNode($2,$4); //<---------------
+															createNewVariableStringNode($2,$4);
 														else{
 															printIDAlreadyCreated($2);
 															return false;
@@ -243,11 +242,11 @@ INT_OPS:		TYPOS '+' INT_OPS			{
 				| '(' INT_OPS ')'			{
 												createParenthesisNode();
 											}
-				| TYPOS						
 
+				| TYPOS
+				
 				;
-
-
+				
 TYPOS:			INTEGER 					{
 												createIntegerNode($1);
 											}				

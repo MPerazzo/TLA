@@ -390,8 +390,9 @@ struct Node* createReadNode(char* var_to_read){
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV); 
 
-sprintf(to_conv, "Scanner _v_%s_s_ = new Scanner(System.in); String _v_%s_s_aux_ = _v_%s_s_.next(); try { %s = Integer.parseInt(_v_%s_s_aux_); } catch (Exception e) { System.out.println(\"Compilation Ended\"); return; }\n",		var_to_read, var_to_read, var_to_read, var_to_read, var_to_read);
-
+	sprintf(to_conv, "Scanner _v_%s_s_ = new Scanner(System.in); String _v_%s_s_aux_ = _v_%s_s_.next(); try { %s = Integer.parseInt(_v_%s_s_aux_); } catch (Exception e) { System.out.println(\"Compilation Ended\"); return; }\n", 
+		var_to_read, var_to_read, var_to_read, var_to_read, var_to_read);
+	
 	n->jconv = to_conv;
 
 	add(n);
