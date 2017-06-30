@@ -18,7 +18,7 @@ void yyerror(const char *s);
         char *string;
 }
 
-%token RUN FUNCTION EXIT
+%token RUN FUNCTION EXIT CONST
 %token INTEGER_TYPE STRING_TYPE 
 %token SET LINE CALL
 %token IF FOR START END WHILE
@@ -39,13 +39,13 @@ void yyerror(const char *s);
 %%
 
 INIT: 	RUN FUNS EXIT	 	{ 	
-								if( check_main_exist() == ACCEPTED ){
+								if(check_main_exist()){
 									printf("Compiled OSO\n");
-									return ACCEPTED;
+									return true;
 
 								} else{
 									printf("Function MAIN missing!\n");
-									return DENNIED;
+									return false;
 								}
 							}
 		;
@@ -56,29 +56,27 @@ FUNS: 		FUN FUNS
 
 FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
 																printf("Not supported in this version\n");
-																return DENNIED;
+																return false;
 															}
 			| FUNCTION STRING_TYPE ID '[' PARAMS ']' BODY 	{
 																printf("Not supported in this version\n");
-																return DENNIED;
+																return true;
 															}
 			| FUNCTION INTEGER_TYPE ID BODY {
 												struct Node* functionNode = createMainNode("void", $3);
-												if(add_function($3) == DENNIED){
+												if(!add_function($3)){
 													printf("Function %s already defined previously\n",$3);
-													return DENNIED;
+													return false;
 												}
-												add_function($3); //agrega la funcion al dmanager
 												add_function_stack(functionNode);
 											}
 
 			| FUNCTION STRING_TYPE ID BODY	{
 												struct Node* functionNode = createMainNode("void", $3);
-												if(add_function($3) == DENNIED){
+												if(!add_function($3)){
 													printf("Function %s already defined previously\n",$3);
-													return DENNIED;
+													return false;
 												}
-												add_function($3);
 												add_function_stack(functionNode);
 											}
 
@@ -106,29 +104,39 @@ STFOR:		FOR COND_FOR BODY		{ createForNode();
 			;
 
 STREAD:		':' ID ':' '.' 	{ 
-								if(check($2) == ACCEPTED)
+								if(check($2))
 									createReadNode($2);
 								else{
 									printIDNotFound($2);
-									return DENNIED;
+									return false;
 								}
 							}
 			;
 
+
+STCONST: 	CONST ID INTEGER '.'	{
+ 										if(!check($2)){
+ 											createNewVariableIntegerNode($2, $3);
+ 										} else {
+ 											printIDNotFound($2);
+ 											return false;
+ 										}
+ 									}
+ 
 STFUNCTION:	CALL ID '.'	{
-							if( check_function_exist($2)== ACCEPTED )
+							if(check_function_exist($2))
 								createCallFunctionNode($2);
 							else {
 								printFunctionNotFound($2);
-								return DENNIED;
+								return false;
 							}
 						}	
 
-STPRINT:	'&' ID '&''.'					 	{	if(check($2) == ACCEPTED)
+STPRINT:	'&' ID '&''.'					 	{	if(check($2))
 														createShowStringNode($2);
 													else{
 														printIDNotFound($2);
-														return DENNIED;
+														return false;
 													}
 												}
 			| '&' INTEGER '&''.' 				{ 
@@ -144,19 +152,19 @@ STPRINT:	'&' ID '&''.'					 	{	if(check($2) == ACCEPTED)
 
 COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ createFromToNode($2,$4,$6);
 												}
-			| '[' ID '=' INTEGER ':' ID ']' 	{ 	if(check($6) == DENNIED){
+			| '[' ID '=' INTEGER ':' ID ']' 	{ 	if(!check($6)){
 														printIDNotFound($6);
-														return DENNIED;
+														return false;
 													}
 													createFromTo2Node($2,$4,$6);
 												}
-			| '[' ID '=' ID ':' ID ']' 			{ 	if(check($6) == DENNIED){
+			| '[' ID '=' ID ':' ID ']' 			{ 	if(!check($6)){
 														printIDNotFound($6);
-														return DENNIED;
+														return false;
 													}
-													if(check($4) == DENNIED){
+													if(!check($4)){
 														printIDNotFound($4);
-														return DENNIED;
+														return false;
 													}
 													createFromTo3Node($2,$4,$6);
 												}
@@ -165,34 +173,34 @@ COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{ createFromToNode($2,$4,$6);
 BODY:		START STATEMENTS END
 			;
 
-DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'				{	if(check($2) == DENNIED)
+DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'				{	if(!check($2))
 															createNewVariableStringNode($2,$4); //<---------------
 														else{
 															printIDAlreadyCreated($2);
-															return DENNIED;
+															return false;
 														}
 													}
-				| INTEGER_TYPE ID '=' INT_OPS '.' 	{ 	if(check($2) == DENNIED)
+				| INTEGER_TYPE ID '=' INT_OPS '.' 	{ 	if(!check($2))
 															createNewVariableInteger2Node($2);
 														else{
 															printIDAlreadyCreated($2);
-															return DENNIED;
+															return false;
 														}
 													}
 				;
 
-CHANGE_VAR: 	SET ID INT_OPS '.'	{ 	if( check($2) == ACCEPTED ){
+CHANGE_VAR: 	SET ID INT_OPS '.'	{ 	if(check($2)){
 											createSetInteger2Node($2);
 										} else {
 											printIDNotFound($2);
-											return DENNIED;
+											return false;
 										}
 									}
-				| SET ID TEXT '.'	{	if( check($2) == ACCEPTED )
+				| SET ID TEXT '.'	{	if(check($2))
 									 		createSetStringNode($2,$3);
 									 	else{
 									 		printIDNotFound($2);
-									 		return DENNIED;
+									 		return false;
 									 	}
 									}
 				;
@@ -205,6 +213,7 @@ STATEMENTS:		DECLARE_VAR
 				| STPRINT
 				| CHANGE_VAR
 				| STFUNCTION
+				| STCONST
 				| DECLARE_VAR STATEMENTS
 				| STIF STATEMENTS
 				| STFOR STATEMENTS
@@ -213,35 +222,42 @@ STATEMENTS:		DECLARE_VAR
 				| STPRINT STATEMENTS
 				| CHANGE_VAR STATEMENTS
 				| STFUNCTION STATEMENTS
+				| STCONST STATEMENTS
 				;
 
-INT_OPS:		INT_OPS '+' INT_OPS			{
+INT_OPS:		TYPOS '+' INT_OPS			{
 												createOPNode("+");
 											}
-				| INT_OPS '-' INT_OPS		{
+				| TYPOS '-' INT_OPS		{
 												createOPNode("-");
 											}
-				| INT_OPS '*' INT_OPS		{
+				| TYPOS '*' INT_OPS		{
 												createOPNode("*");
 											}
-				| INT_OPS '/' INT_OPS		{
+				| TYPOS '/' INT_OPS		{
 												createOPNode("/");
 											}
-				| INT_OPS '%' INT_OPS		{
+				| TYPOS '%' INT_OPS		{
 												createOPNode("%");
 											}
 				| '(' INT_OPS ')'			{
 												createParenthesisNode();
 											}
-				| INTEGER 					{
+				| TYPOS						
+
+				;
+
+
+TYPOS:			INTEGER 					{
 												createIntegerNode($1);
-											}
+											}				
+
 				| ID 						{
-												if( check($1) == ACCEPTED )
+												if(check($1))
 											 		createCallVariableNode($1);
 											 	else{
 											 		printIDNotFound($1);
-											 		return DENNIED;
+											 		return false;
 											 	}
 											}
 				;
@@ -257,42 +273,78 @@ BOOL_CONDITION:
 													createCMPNode("==",createIntegerNodeNoToStack($1),createIntegerNodeNoToStack($4));
 												}
 				| ID '>' INTEGER 				{	
-													if (check($1) == DENNIED) {printIDNotFound($1); return DENNIED;}
+													if (!check($1)) {
+														printIDNotFound($1); 
+														return false;
+													}
 													createCMPNode(">",createVariableCreated($1), createIntegerNodeNoToStack($3));
 												}
 				| ID '<' INTEGER 				{
-													if (check($1) == DENNIED) {printIDNotFound($1); return DENNIED;}
+													if (!check($1)) {
+														printIDNotFound($1); 
+														return false;
+													}
 													createCMPNode("<",createVariableCreated($1), createIntegerNodeNoToStack($3));
 												} 
 				| ID '=''=' INTEGER 			{
-													if (check($1) == DENNIED) {printIDNotFound($1); return DENNIED;}
+													if (!check($1)) {
+														printIDNotFound($1); 
+														return false;
+													}
 													createCMPNode("==",createVariableCreated($1), createIntegerNodeNoToStack($4));
 												}
 				| ID '>' ID 					{ 
-													if (check($1) == DENNIED) {printIDNotFound($1); return DENNIED;}
-													if (check($3) == DENNIED) {printIDNotFound($3); return DENNIED;}
+													if (!check($1)) {
+														printIDNotFound($1); 
+														return false;
+													}
+													if (!check($3)) {
+														printIDNotFound($3); 
+														return false;
+													}
 													createCMPNode(">",createVariableCreated($1), createVariableCreated($3));
 												} 
 				| ID '<' ID 					{
-													if (check($1) == DENNIED) {printIDNotFound($1); return DENNIED;} 
-													if (check($3) == DENNIED) {printIDNotFound($3); return DENNIED;}
+													if (!check($1)) {
+														printIDNotFound($1); 
+														return false;
+													}
+													if (!check($3)) {
+														printIDNotFound($3); 
+														return false;
+													}
 													createCMPNode("<",createVariableCreated($1), createVariableCreated($3));
 												} 
 				| ID '=''=' ID 					{
-													if (check($1) == DENNIED) {printIDNotFound($1); return DENNIED;} 
-													if (check($4) == DENNIED) {printIDNotFound($4); return DENNIED;}
+													if (!check($1)) {
+														printIDNotFound($1); 
+														return false;
+													}
+													if (!check($4)) {
+														printIDNotFound($4); 
+														return false;
+													}
 													createCMPNode("==",createVariableCreated($1), createVariableCreated($4));
 												}
 				| INTEGER '>' ID 				{
-													if (check($3) == DENNIED) {printIDNotFound($3); return DENNIED;}
+													if (!check($3)) {
+														printIDNotFound($3); 
+														return false;
+													}
 													createCMPNode(">",createIntegerNodeNoToStack($1), createVariableCreated($3));
 												}  
 				| INTEGER '<' ID 				{
-													if (check($3) == DENNIED) {printIDNotFound($3); return DENNIED;}
+													if (!check($3)) {
+														printIDNotFound($3); 
+														return false;
+													}
 													createCMPNode("<",createIntegerNodeNoToStack($1), createVariableCreated($3));
 												} 
 				| INTEGER '=''=' ID 			{
-													if (check($4) == DENNIED) {printIDNotFound($4); return DENNIED;}
+													if (!check($4)) {
+														printIDNotFound($4); 
+														return false;
+													}
 													createCMPNode("==",createIntegerNodeNoToStack($1), createVariableCreated($4));
 												}
 				;		
@@ -313,9 +365,7 @@ int yywrap()
 
 int main() {
 
-    int ret = yyparse();
-
-    if (ret == ACCEPTED){
+    if (yyparse()){
     	outputinit();
     	output("import java.util.Scanner;\n");
 		output("public class output {\n");

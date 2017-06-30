@@ -30,7 +30,7 @@ struct Node* createNewVariableIntegerNode(char* name, int value){
 
 	struct Node* n = malloc(sizeof(struct Node));
 
-	if ( add_variable(name) == DENNIED ){
+	if (!add_variable(name)){
 		return n;
 	}
 
@@ -54,7 +54,7 @@ struct Node* createNewVariableInteger2Node(char* name){
 
 	struct Node* n = malloc(sizeof(struct Node));
 
-	if ( add_variable(name) == DENNIED ){
+	if (!add_variable(name)){
 		return n;
 	}
 
@@ -76,7 +76,7 @@ struct Node* createNewVariableStringNode(char* name, char* value){
 
 	struct Node* n = malloc(sizeof(struct Node));
 
-	if ( add_variable(name) == DENNIED ){
+	if (!add_variable(name)){
 		return n;
 	}
 
@@ -244,7 +244,7 @@ struct Node* createFromToNode(char* name, int from, int to){
 
 	struct Node* n = malloc(sizeof(struct Node));
 
-	if ( add_variable(name) == DENNIED ){
+	if (!add_variable(name)){
 		return n;
 	}
 
@@ -266,7 +266,7 @@ struct Node* createFromTo2Node(char* name, int from, char* to){
 
 	struct Node* n = malloc(sizeof(struct Node));
 
-	if ( add_variable(name) == DENNIED ){
+	if (!add_variable(name)){
 		return n;
 	}
 
@@ -288,7 +288,7 @@ struct Node* createFromTo3Node(char* name, char* from, char* to){
 
 	struct Node* n = malloc(sizeof(struct Node));
 
-	if ( add_variable(name) == DENNIED ){
+	if (!add_variable(name)){
 		return n;
 	}
 
@@ -390,8 +390,7 @@ struct Node* createReadNode(char* var_to_read){
 
 	char* to_conv = malloc(sizeof(char) * MAX_JCONV); 
 
-	sprintf(to_conv, "Scanner _v_%s_s_ = new Scanner(System.in); String _v_%s_s_aux_ = _v_%s_s_.next(); try { %s = Integer.parseInt(_v_%s_s_aux_); } catch (Exception e) { System.out.println(\"Compilation Ended\"); }\n", 
-		var_to_read, var_to_read, var_to_read, var_to_read, var_to_read);
+sprintf(to_conv, "Scanner _v_%s_s_ = new Scanner(System.in); String _v_%s_s_aux_ = _v_%s_s_.next(); try { %s = Integer.parseInt(_v_%s_s_aux_); } catch (Exception e) { System.out.println(\"Compilation Ended\"); return; }\n",		var_to_read, var_to_read, var_to_read, var_to_read, var_to_read);
 
 	n->jconv = to_conv;
 

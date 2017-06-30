@@ -3,18 +3,18 @@
 
 #define MAX_VARIABLES 100
 #define MAX_FUNCTIONS 100
-#define ACCEPTED 0
-#define DENNIED 1
+
+typedef enum{false, true} bool;
 
 unsigned int create_hash(char *key);
-int check_var_exist(unsigned int hash_var_name);
-int add_variable(char* key);
+bool check_var_exist(unsigned int hash_var_name);
+bool add_variable(char* key);
 void clear_vars();
-int check(char* id);
+bool check(char* id);
 void printIDNotFound(char* id);
-int check_function_exist(char* function_name);
-int add_function(char* function_name);
-int check_main_exist();
+bool check_function_exist(char* function_name);
+bool add_function(char* function_name);
+bool check_main_exist();
 void printIDAlreadyCreated(char* id);
 void to_ret_functions();
 void printFunctionNotFound(char* function_name);

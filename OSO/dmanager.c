@@ -30,57 +30,45 @@ unsigned int create_hash(char *key){
     return hash;
 }
 
-int check_var_exist(unsigned int hash_var_name){
-
-	if(tot_var_defined == 0){
-		return ACCEPTED;
-	}
+bool check_var_exist(unsigned int hash_var_name){
 
 	int i;
 	for(i = 0 ; i < tot_var_defined; i++){
 		if( vars_names[i] == hash_var_name ){
-			return DENNIED;
+			return false;
 		}
 	}
-	return ACCEPTED;
+	return true;
 }
 
-int check(char* id){
+bool check(char* id){
 	int hash = create_hash(id);
 	
 	int i;
 	for(i = 0 ; i < tot_var_defined ; i++){
 		if (vars_names[i] == hash)
-			return ACCEPTED; 
+			return true; 
 	}
 
-	return DENNIED;
+	return false;
 }
 
-int add_variable(char* key){
+bool add_variable(char* key){
 	unsigned int hash = create_hash(key);
 
-	if(check_var_exist(hash) == ACCEPTED){
+	if(check_var_exist(hash)){
 		vars_names[tot_var_defined] = hash;
 		tot_var_defined++;
-		return ACCEPTED;
+		return true;
 	}else{
 		printf("Already define %s variable name before\n",key);
-		return DENNIED;
+		return false;
 	}
 
 }
 
 void clear_vars(){
-
-	int i;
-	for(i = 0 ; i < tot_var_defined ; i++){
-		vars_names[i] = 0;
-	}
-
 	tot_var_defined = 0;
-
-	return;
 }
 
 void printIDNotFound(char* id){
@@ -95,47 +83,43 @@ void printIDAlreadyCreated(char* id){
 	printf("Variable %s was initialized before\n",id);
 }
 
-int check_function_exist(char* function_name){
+bool check_function_exist(char* function_name){
 	int hash = create_hash(function_name);
-
-	if( tot_functions_defined == 0 ){
-		return DENNIED; //no existe la funcion!
-	}
 
 	int i;
 	for( i = 0 ; i < tot_functions_defined ; i++){
 		if (functions_names[i] == hash){
-			return ACCEPTED;
+			return true;
 		}
 	}
 
-	return DENNIED;
+	return false;
 
 }
 
-int add_function(char* function_name){
+bool add_function(char* function_name){
 
-	if ( check_function_exist(function_name) == ACCEPTED ){
-		return DENNIED;
+	if (check_function_exist(function_name)){
+		return false;
 	}
 
 	int hash = create_hash(function_name);
 	//printf("el HASH de %s : %d\n",function_name,hash);
 	functions_names[tot_functions_defined] = hash;
 	tot_functions_defined++;
-	return ACCEPTED;
+	return true;
 
 }
 
-int check_main_exist(){
+bool check_main_exist(){
 	int i = 0;
 	int hash_main = create_hash("main");
 
 	for( i = 0 ; i < tot_functions_defined ; i++){
 		if( functions_names[i] == hash_main )
-			return ACCEPTED;
+			return true;
 	}
-	return DENNIED;
+	return false;
 }
 
 void to_ret_functions(){

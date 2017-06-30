@@ -23,6 +23,7 @@ string		return STRING_TYPE;
 line		return LINE;
 set 		return SET;
 call		return CALL;
+const 		return CONST;
 
 start 		return START;
 end			return END;
