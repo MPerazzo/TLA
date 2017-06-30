@@ -1,0 +1,11 @@
+RUNOSO
+
+function integer main start
+
+	while [ 100 > 1 ] start
+		integer a = 8.
+	end
+
+end
+
+EXITOSO

@@ -359,6 +359,18 @@ struct Node* createWhileNode(){
 
 	}
 
+	int tot_elems = n->tot_nodes;
+	char* to_conv = malloc(sizeof(char) * MAX_JCONV);
+	sprintf(to_conv,"while ( %s ) { \n", n->nodes[tot_elems - 1]->jconv);
+
+	int i;
+	for(i = tot_elems - 2 ; i >= 0 ; i--){
+		sprintf(to_conv,"%s %s",to_conv,n->nodes[i]->jconv);
+	}
+
+	sprintf(to_conv,"%s %s\n",to_conv,"}");
+	n->jconv = to_conv;	
+
 	add(n);
 	return n;
 
