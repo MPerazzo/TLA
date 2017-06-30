@@ -215,5 +215,5 @@ void handle_compile_success() {
 }
 
 void handle_main_missing() {
-	printf("Function MAIN missing!\n");
+	printf("Syntax error : Function MAIN missing!\n");
 }
