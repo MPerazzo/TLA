@@ -2,6 +2,8 @@
 #include "stack.h"
 #include "handler.h"
 
+int extern line;
+
 bool handle_main() {
 	if (check_main_exist()){
 		handle_compile_success();
@@ -189,23 +191,23 @@ bool handle_var_var_cmp(char * logic_op, char * id1, char * id2) {
 }
 
 void handle_params_notSupported() {
-	printf("Function arguments not supported in this version\n");
+	printf("Error at line %d : Function arguments not supported in this version\n", line);
 }
 
 void handle_fun_undefined(char* function_name){
-	printf("Function '%s' not defined\n",function_name);
+	printf("Error at line %d : Function '%s' not defined\n", line, function_name);
 }
 
 void handle_funRep(char * id) {
-	printf("Function %s already defined previously\n",id);
+	printf("Error at line %d : Function '%s' already defined previously\n", line, id);
 }
 
 void handle_var_undefined(char* id){
-	printf("Variable '%s' not defined\n",id);
+	printf("Error at line %d : Variable '%s' not defined\n",line, id);
 }
 
 void handle_varRep(char* id){
-	printf("Variable '%s' already defined\n",id);
+	printf("Error at line %d : Variable '%s' already defined\n",line, id);
 }
 
 void handle_compile_success() {

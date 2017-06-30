@@ -51,21 +51,25 @@ FUNS: 		FUN FUNS
 			;
 
 FUN:		FUNCTION INTEGER_TYPE ID '[' PARAMS ']' BODY 	{
+																line = @1.first_line;
 																handle_params_notSupported();
 																return false;
 															}
 			
 			| FUNCTION STRING_TYPE ID '[' PARAMS ']' BODY 	{
+																line = @1.first_line;
 																handle_params_notSupported();
 																return false;
 															}
 			| FUNCTION INTEGER_TYPE ID BODY {
+												line = @1.first_line;
 												if (!handle_funDeclaration($3))
 													return false;
 
 											}
 
 			| FUNCTION STRING_TYPE ID BODY	{
+												line = @1.first_line;
 												if (!handle_funDeclaration($3))
 													return false;
 											}
@@ -96,23 +100,27 @@ STFOR:		FOR COND_FOR BODY		{
 									}
 			;
 
-STREAD:		':' ID ':' '.' 	{ 
+STREAD:		':' ID ':' '.' 	{
+								line = @1.first_line; 
 								if (!handle_stdRead($2))
 									return false;
 							}
 			;
 
 STCONST: 	CONST ID INTEGER '.'	{
+										line = @1.first_line;
  										if (!handle_constInteger($2, $3))
  											return false;
  									}
  
 STFUNCTION:	CALL ID '.'	{
+							line = @1.first_line;
 							if (!handle_funCall($2))
 								return false;
 						}	
 
-STPRINT:	'&' ID '&''.'					 	{	
+STPRINT:	'&' ID '&''.'					 	{
+													line = @1.first_line;
 													if (!handle_var_stdWrite($2))
 														return false;
 												}
@@ -135,12 +143,14 @@ COND_FOR: 	'[' ID '=' INTEGER ':' INTEGER ']' 	{
 												}
 			
 			| '[' ID '=' INTEGER ':' ID ']' 	{ 	
+													line = @1.first_line;
 													if (!handle_condFor_varLimit($2,$4,$6))
 														return false;
 
 												}
 			
 			| '[' ID '=' ID ':' ID ']' 			{ 	
+													line = @1.first_line;
 													if (!handle_condFor_allVar($2, $4, $6))
 														return false;
 												}
@@ -150,22 +160,26 @@ BODY:		START STATEMENTS END
 			;
 
 DECLARE_VAR: 	STRING_TYPE ID '=' TEXT '.'			{
+														line = @1.first_line;
 														if (!handle_string_varDeclaration($2, $4))	
 															return false;
 													}
 													
 				| INTEGER_TYPE ID '=' INT_OPS '.' 	{ 		
+														line = @1.first_line;
 														if (!handle_int_varDeclaration($2))
 															return false;
 													}
 				;
 
 CHANGE_VAR: 	SET ID INT_OPS '.'	{ 	
+										line = @1.first_line;
 										if (!handle_int_set($2))
 											return false;
 									}
 				
 				| SET ID TEXT '.'	{	
+										line = @1.first_line;
 										if (!handle_string_set($2, $3))
 											return false;
 									}
@@ -242,46 +256,55 @@ BOOL_CONDITION:
 												}
 				
 				| ID '>' INTEGER 				{	
+													line = @1.first_line;			
 													if (!handle_int_var_cmp(">", $1, $3))
 														return false;
 												}
 				
 				| ID '<' INTEGER 				{
+													line = @1.first_line;			
 													if (!handle_int_var_cmp("<", $1, $3))
 														return false;
 												} 
 				
 				| ID '=''=' INTEGER 			{
+													line = @1.first_line;				
 													if (!handle_int_var_cmp("==", $1, $4))
 														return false;
 												}
 				
 				| ID '>' ID 					{ 
+													line = @1.first_line;				
 													if (!handle_var_var_cmp(">", $1, $3))
 														return false;
 												} 
 				
 				| ID '<' ID 					{
+													line = @1.first_line;				
 													if (!handle_var_var_cmp("<", $1, $3))
 														return false;
 												} 
 				
 				| ID '=''=' ID 					{
+													line = @1.first_line;				
 													if (!handle_var_var_cmp("==", $1, $4))
 														return false;
 												}
 				
 				| INTEGER '>' ID 				{
+													line = @1.first_line;				
 													if (!handle_int_var_cmp(">", $3, $1))
 														return false;
 												}  
 				
 				| INTEGER '<' ID 				{
+													line = @1.first_line;				
 													if (!handle_int_var_cmp("<", $3, $1))
 														return false;
 												} 
 				
 				| INTEGER '=''=' ID 			{
+													line = @1.first_line;				
 													if (!handle_int_var_cmp(">", $4, $1))
 														return false;
 												}

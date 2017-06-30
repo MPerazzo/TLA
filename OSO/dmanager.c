@@ -49,11 +49,8 @@ bool add_variable(char* key){
 		vars_names[tot_var_defined] = create_hash(key);
 		tot_var_defined++;
 		return true;
-	}else{
-		printf("Variable '%s' already defined\n",key);
+	}else
 		return false;
-	}
-
 }
 
 void clear_vars(){
